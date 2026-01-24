@@ -143,13 +143,14 @@ export default function HallOfFame() {
     async function fetchData() {
       try {
         const data = await getAllData()
-        // Filter books with rating >= 4 and sort by rating (desc), then by date (desc)
+        // Get top 5 rated books, sorted by rating (desc), then by date (desc)
         const hofBooks = (data.books || [])
-          .filter(book => book.rating >= 4)
+          .filter(book => book.rating > 0)
           .sort((a, b) => {
             if (b.rating !== a.rating) return b.rating - a.rating
             return new Date(b.dateFinished) - new Date(a.dateFinished)
           })
+          .slice(0, 5)
         setBooks(hofBooks)
       } catch (err) {
         console.error('Error fetching data:', err)
@@ -239,7 +240,7 @@ export default function HallOfFame() {
             HALL OF FAME
           </h1>
           <p className="text-gray-400 mt-4 text-lg">
-            The Absolute Best Reads from Court Reads
+            The Top 5 Highest Rated Reads
           </p>
         </div>
 
@@ -272,7 +273,7 @@ export default function HallOfFame() {
           <div className="text-center py-16">
             <TrophyIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
             <p className="text-gray-500 text-lg">No books inducted yet</p>
-            <p className="text-gray-600 text-sm mt-2">Books rated 4+ stars will appear here</p>
+            <p className="text-gray-600 text-sm mt-2">Add some rated books to see the top 5 here</p>
           </div>
         )}
       </main>
