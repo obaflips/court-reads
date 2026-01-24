@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sonics-green: #00653A;
+  --color-sonics-gold: #FFC200;
+  --color-sonics-dark: #0a1612;
+  --font-family-display: "Oswald", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-sonics-dark text-white min-h-screen;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Basketball dunk animation */
+@keyframes bounce-dunk {
+  0% {
+    transform: translateY(-120px) translateX(-40px);
+  }
+  30% {
+    transform: translateY(-60px) translateX(-20px);
+  }
+  50% {
+    transform: translateY(-100px) translateX(0px);
+  }
+  70% {
+    transform: translateY(-40px) translateX(10px);
+  }
+  85% {
+    transform: translateY(20px) translateX(0px);
+  }
+  100% {
+    transform: translateY(60px) translateX(0px);
+  }
+}
+
+@keyframes jump {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  30% {
+    transform: translateX(-50%) translateY(-20px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-60px);
+  }
+  70% {
+    transform: translateX(-50%) translateY(-40px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.animate-bounce-dunk {
+  animation: bounce-dunk 1.5s ease-in-out infinite;
+}
+
+.animate-jump {
+  animation: jump 1.5s ease-in-out infinite;
+}
+
+/* Hall of Fame animations */
+@keyframes shimmer-slow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-shimmer-slow {
+  animation: shimmer-slow 3s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Global focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #FFC200;
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users, keep for keyboard */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for better visual consistency */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a1612;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00653A;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #008048;
+}
+
+/* Better touch targets on mobile */
+@media (pointer: coarse) {
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Selection color */
+::selection {
+  background: #00653A;
+  color: #FFC200;
+}
