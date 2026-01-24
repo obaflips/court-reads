@@ -5,11 +5,56 @@
   --color-sonics-gold: #FFC200;
   --color-sonics-dark: #0a1612;
   --font-family-display: "Oswald", system-ui, sans-serif;
+  --font-family-impact: "Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
 }
 
 body {
-  @apply bg-sonics-dark text-white min-h-screen;
+  @apply bg-gradient-to-br from-amber-50 to-stone-100 text-stone-900 min-h-screen;
   font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Hardwood floor texture overlay */
+.hardwood-bg {
+  position: relative;
+}
+
+.hardwood-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(139, 90, 43, 0.03) 60px,
+      rgba(139, 90, 43, 0.03) 61px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 200px,
+      rgba(139, 90, 43, 0.02) 200px,
+      rgba(139, 90, 43, 0.02) 201px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Court lines overlay */
+.court-lines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    /* Center circle */
+    radial-gradient(circle at 50% 30%, transparent 80px, rgba(0, 101, 58, 0.08) 80px, rgba(0, 101, 58, 0.08) 82px, transparent 82px),
+    /* Three-point arc left */
+    radial-gradient(ellipse 300px 400px at 0% 60%, transparent 280px, rgba(0, 101, 58, 0.06) 280px, rgba(0, 101, 58, 0.06) 282px, transparent 282px),
+    /* Three-point arc right */
+    radial-gradient(ellipse 300px 400px at 100% 60%, transparent 280px, rgba(0, 101, 58, 0.06) 280px, rgba(0, 101, 58, 0.06) 282px, transparent 282px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Basketball dunk animation */

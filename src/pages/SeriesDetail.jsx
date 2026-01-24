@@ -25,9 +25,9 @@ function calculateTrend(ratings) {
 
 function TrendIndicator({ trend }) {
   const config = {
-    rising: { icon: '↗', color: 'text-green-400', bg: 'bg-green-900/30', label: 'Rising' },
-    falling: { icon: '↘', color: 'text-red-400', bg: 'bg-red-900/30', label: 'Falling' },
-    steady: { icon: '→', color: 'text-yellow-400', bg: 'bg-yellow-900/30', label: 'Steady' },
+    rising: { icon: '↗', color: 'text-green-700', bg: 'bg-green-100', label: 'Rising' },
+    falling: { icon: '↘', color: 'text-red-600', bg: 'bg-red-100', label: 'Falling' },
+    steady: { icon: '→', color: 'text-amber-600', bg: 'bg-amber-100', label: 'Steady' },
   }
 
   const { icon, color, bg, label } = config[trend] || config.steady
@@ -56,14 +56,14 @@ function RatingBar({ rating, bookNumber, playerNumber, isRead, maxHeight = 160 }
           className={`w-full rounded-t-lg transition-all duration-500 ${
             isRead
               ? 'bg-gradient-to-t from-emerald-700 to-emerald-500'
-              : 'bg-gray-700 border-2 border-dashed border-gray-500'
+              : 'bg-stone-200 border-2 border-dashed border-stone-300'
           }`}
           style={{ height: `${barHeight}px` }}
         >
           {/* Player number or ? */}
           <div className="absolute inset-0 flex items-center justify-center">
             <span
-              className={`text-lg font-bold ${isRead ? 'text-white' : 'text-gray-500'}`}
+              className={`text-lg font-bold ${isRead ? 'text-white' : 'text-stone-400'}`}
               style={{ fontFamily: 'var(--font-family-display)' }}
             >
               {isRead ? (playerNumber ? `#${playerNumber}` : '—') : '?'}
@@ -74,9 +74,9 @@ function RatingBar({ rating, bookNumber, playerNumber, isRead, maxHeight = 160 }
 
       {/* Book number label */}
       <div className="text-center">
-        <div className="text-xs text-gray-500">Book</div>
+        <div className="text-xs text-stone-500">Book</div>
         <div
-          className={`text-sm font-bold ${isRead ? 'text-white' : 'text-gray-600'}`}
+          className={`text-sm font-bold ${isRead ? 'text-emerald-800' : 'text-stone-400'}`}
           style={{ fontFamily: 'var(--font-family-display)' }}
         >
           {bookNumber}
@@ -117,9 +117,9 @@ function RatingProgressionChart({ seriesBooks, totalBooks }) {
   const readBooks = allBooks.filter(b => b.isRead && b.rating)
 
   return (
-    <div className="border border-sonics-green/30 rounded-xl p-6 bg-sonics-green/5">
+    <div className="bg-white border-4 border-emerald-600 rounded-xl p-6 shadow-lg">
       <h3
-        className="text-lg font-bold text-sonics-green mb-6 uppercase tracking-wider"
+        className="text-lg font-bold text-emerald-700 mb-6 uppercase tracking-wider"
         style={{ fontFamily: 'var(--font-family-display)' }}
       >
         Rating Progression
@@ -127,7 +127,7 @@ function RatingProgressionChart({ seriesBooks, totalBooks }) {
 
       <div className="relative">
         {/* Y-axis labels */}
-        <div className="absolute left-0 top-0 bottom-8 w-8 flex flex-col justify-between text-xs text-gray-500">
+        <div className="absolute left-0 top-0 bottom-8 w-8 flex flex-col justify-between text-xs text-stone-500">
           <span>5★</span>
           <span>4★</span>
           <span>3★</span>
@@ -142,7 +142,7 @@ function RatingProgressionChart({ seriesBooks, totalBooks }) {
             {[0, 1, 2, 3, 4].map(i => (
               <div
                 key={i}
-                className="absolute left-0 right-0 border-t border-gray-700/50"
+                className="absolute left-0 right-0 border-t border-stone-200"
                 style={{ top: `${i * 25}%` }}
               />
             ))}
@@ -234,36 +234,36 @@ export default function SeriesDetail() {
         <Header />
         <main className="max-w-5xl mx-auto px-4 py-8">
           {/* Back button skeleton */}
-          <div className="h-5 w-32 bg-sonics-green/20 rounded mb-8 animate-pulse" />
+          <div className="h-5 w-32 bg-emerald-200 rounded mb-8 animate-pulse" />
 
           {/* Series Header skeleton */}
           <div className="mb-8 animate-pulse">
-            <div className="h-10 bg-sonics-green/20 rounded w-2/3 mb-3" />
-            <div className="h-6 bg-sonics-green/20 rounded w-1/3" />
+            <div className="h-10 bg-emerald-200 rounded w-2/3 mb-3" />
+            <div className="h-6 bg-emerald-200 rounded w-1/3" />
           </div>
 
           {/* Stats Grid skeleton */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="border border-sonics-green/20 rounded-xl p-4 animate-pulse">
-                <div className="h-4 bg-sonics-green/20 rounded w-16 mb-2" />
-                <div className="h-8 bg-sonics-green/20 rounded w-20" />
+              <div key={i} className="bg-white border-2 border-emerald-200 rounded-xl p-4 animate-pulse">
+                <div className="h-4 bg-emerald-100 rounded w-16 mb-2" />
+                <div className="h-8 bg-emerald-100 rounded w-20" />
               </div>
             ))}
           </div>
 
           {/* Chart skeleton */}
-          <div className="border border-sonics-green/20 rounded-xl p-6 mb-8 animate-pulse">
-            <div className="h-5 bg-sonics-green/20 rounded w-40 mb-6" />
-            <div className="h-48 bg-sonics-green/20 rounded" />
+          <div className="bg-white border-2 border-emerald-200 rounded-xl p-6 mb-8 animate-pulse">
+            <div className="h-5 bg-emerald-100 rounded w-40 mb-6" />
+            <div className="h-48 bg-emerald-100 rounded" />
           </div>
 
           {/* Table skeleton */}
-          <div className="h-5 bg-sonics-green/20 rounded w-48 mb-4 animate-pulse" />
-          <div className="border border-sonics-green/20 rounded-xl overflow-hidden animate-pulse">
-            <div className="h-12 bg-sonics-green/10" />
+          <div className="h-5 bg-emerald-200 rounded w-48 mb-4 animate-pulse" />
+          <div className="bg-white border-2 border-emerald-200 rounded-xl overflow-hidden animate-pulse">
+            <div className="h-12 bg-emerald-100" />
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-20 border-t border-sonics-green/10" />
+              <div key={i} className="h-20 border-t border-emerald-100" />
             ))}
           </div>
         </main>
@@ -278,7 +278,7 @@ export default function SeriesDetail() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <div className="mb-6">
-            <svg className="w-20 h-20 mx-auto text-sonics-gold/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg className="w-20 h-20 mx-auto text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               {isNotFound ? (
                 <>
                   <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -292,13 +292,13 @@ export default function SeriesDetail() {
           </div>
 
           <h1
-            className="text-3xl md:text-4xl font-bold text-sonics-gold"
+            className="text-3xl md:text-4xl font-bold text-emerald-800"
             style={{ fontFamily: 'var(--font-family-display)' }}
           >
             {isNotFound ? 'SERIES NOT FOUND' : 'TECHNICAL FOUL'}
           </h1>
 
-          <p className="text-gray-400 mt-4">
+          <p className="text-stone-600 mt-4">
             {isNotFound
               ? "This series doesn't exist in our library."
               : error}
@@ -307,14 +307,14 @@ export default function SeriesDetail() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <Link
               to="/"
-              className="px-6 py-3 bg-sonics-gold text-sonics-dark font-semibold rounded-lg hover:bg-sonics-gold/90 transition-colors focus:outline-none focus:ring-2 focus:ring-sonics-gold focus:ring-offset-2 focus:ring-offset-sonics-dark"
+              className="px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
             >
               Back to Roster
             </Link>
             {!isNotFound && (
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 border border-sonics-green text-sonics-green font-semibold rounded-lg hover:bg-sonics-green/10 transition-colors focus:outline-none focus:ring-2 focus:ring-sonics-green focus:ring-offset-2 focus:ring-offset-sonics-dark"
+                className="px-6 py-3 border border-emerald-700 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2"
               >
                 Try Again
               </button>
@@ -342,7 +342,7 @@ export default function SeriesDetail() {
         {/* Back Button */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sonics-green hover:text-sonics-gold transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-emerald-700 hover:text-amber-600 transition-colors mb-8"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -353,47 +353,47 @@ export default function SeriesDetail() {
         {/* Series Header */}
         <div className="mb-8">
           <h1
-            className="text-3xl md:text-4xl font-bold text-white"
+            className="text-3xl md:text-4xl font-bold text-emerald-800"
             style={{ fontFamily: 'var(--font-family-display)' }}
           >
             {series.name}
           </h1>
           {series.author && (
-            <p className="text-xl text-gray-400 mt-2">by {series.author}</p>
+            <p className="text-xl text-stone-600 mt-2">by {series.author}</p>
           )}
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {/* Progress */}
-          <div className="border border-sonics-green/30 rounded-xl p-4 bg-sonics-green/5">
-            <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Progress</div>
+          <div className="bg-white border-2 border-emerald-200 rounded-xl p-4 shadow-sm">
+            <div className="text-sm text-stone-500 uppercase tracking-wider mb-1">Progress</div>
             <div
-              className="text-2xl md:text-3xl font-bold text-sonics-gold"
+              className="text-2xl md:text-3xl font-bold text-amber-600"
               style={{ fontFamily: 'var(--font-family-display)' }}
             >
               {booksRead}/{totalBooks}
             </div>
-            <div className="text-xs text-gray-500 mt-1">books read</div>
+            <div className="text-xs text-stone-500 mt-1">books read</div>
           </div>
 
           {/* Average Rating */}
-          <div className="border border-sonics-green/30 rounded-xl p-4 bg-sonics-green/5">
-            <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Avg Rating</div>
+          <div className="bg-white border-2 border-emerald-200 rounded-xl p-4 shadow-sm">
+            <div className="text-sm text-stone-500 uppercase tracking-wider mb-1">Avg Rating</div>
             <div
-              className="text-2xl md:text-3xl font-bold text-sonics-gold"
+              className="text-2xl md:text-3xl font-bold text-amber-600"
               style={{ fontFamily: 'var(--font-family-display)' }}
             >
               {avgRating}
             </div>
-            <div className="text-xs text-gray-500 mt-1">out of 5</div>
+            <div className="text-xs text-stone-500 mt-1">out of 5</div>
           </div>
 
           {/* Team Name */}
-          <div className="border border-sonics-green/30 rounded-xl p-4 bg-sonics-green/5">
-            <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Series Team</div>
+          <div className="bg-white border-2 border-emerald-200 rounded-xl p-4 shadow-sm">
+            <div className="text-sm text-stone-500 uppercase tracking-wider mb-1">Series Team</div>
             <div
-              className="text-lg md:text-xl font-bold text-white leading-tight"
+              className="text-lg md:text-xl font-bold text-emerald-800 leading-tight"
               style={{ fontFamily: 'var(--font-family-display)' }}
             >
               {series.teamName || '—'}
@@ -401,8 +401,8 @@ export default function SeriesDetail() {
           </div>
 
           {/* Trend */}
-          <div className="border border-sonics-green/30 rounded-xl p-4 bg-sonics-green/5">
-            <div className="text-sm text-gray-500 uppercase tracking-wider mb-1">Trend</div>
+          <div className="bg-white border-2 border-emerald-200 rounded-xl p-4 shadow-sm">
+            <div className="text-sm text-stone-500 uppercase tracking-wider mb-1">Trend</div>
             <TrendIndicator trend={trend} />
           </div>
         </div>
@@ -415,33 +415,33 @@ export default function SeriesDetail() {
         {/* Series Team Roster */}
         <section>
           <h2
-            className="text-xl font-bold text-sonics-green mb-4 uppercase tracking-wider"
+            className="text-xl font-bold text-emerald-700 mb-4 uppercase tracking-wider"
             style={{ fontFamily: 'var(--font-family-display)' }}
           >
             Series Team Roster
           </h2>
 
-          <div className="border border-sonics-green/30 rounded-xl overflow-hidden">
+          <div className="bg-white border-4 border-emerald-600 rounded-xl overflow-hidden shadow-lg">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-sonics-green/20 text-left">
-                    <th className="px-4 py-3 text-sonics-gold font-semibold text-sm uppercase tracking-wider w-12">
+                  <tr className="bg-emerald-700 text-left">
+                    <th className="px-4 py-3 text-amber-400 font-semibold text-sm uppercase tracking-wider w-12">
                       #
                     </th>
-                    <th className="px-4 py-3 text-sonics-gold font-semibold text-sm uppercase tracking-wider w-16">
+                    <th className="px-4 py-3 text-amber-400 font-semibold text-sm uppercase tracking-wider w-16">
                       Cover
                     </th>
-                    <th className="px-4 py-3 text-sonics-gold font-semibold text-sm uppercase tracking-wider w-24">
+                    <th className="px-4 py-3 text-amber-400 font-semibold text-sm uppercase tracking-wider w-24">
                       Rating
                     </th>
-                    <th className="px-4 py-3 text-sonics-gold font-semibold text-sm uppercase tracking-wider">
+                    <th className="px-4 py-3 text-amber-400 font-semibold text-sm uppercase tracking-wider">
                       Book
                     </th>
-                    <th className="px-4 py-3 text-sonics-gold font-semibold text-sm uppercase tracking-wider">
+                    <th className="px-4 py-3 text-amber-400 font-semibold text-sm uppercase tracking-wider">
                       Player Comp
                     </th>
-                    <th className="px-4 py-3 text-sonics-gold font-semibold text-sm uppercase tracking-wider hidden md:table-cell">
+                    <th className="px-4 py-3 text-amber-400 font-semibold text-sm uppercase tracking-wider hidden md:table-cell">
                       Tagline
                     </th>
                   </tr>
@@ -465,14 +465,14 @@ export default function SeriesDetail() {
                     return (
                       <tr
                         key={position}
-                        className={`border-t border-sonics-green/10 ${
-                          isRead ? 'hover:bg-sonics-green/5' : 'opacity-50'
+                        className={`border-t border-emerald-100 ${
+                          isRead ? 'hover:bg-emerald-50' : 'opacity-50'
                         } transition-colors`}
                       >
                         {/* Position Number */}
                         <td className="px-4 py-4">
                           <span
-                            className={`text-xl font-bold ${isRead ? 'text-sonics-gold/70' : 'text-gray-600'}`}
+                            className={`text-xl font-bold ${isRead ? 'text-amber-500' : 'text-stone-400'}`}
                             style={{ fontFamily: 'var(--font-family-display)' }}
                           >
                             {String(position).padStart(2, '0')}
@@ -487,15 +487,15 @@ export default function SeriesDetail() {
                                 <img
                                   src={book.coverUrl}
                                   alt={book.title}
-                                  className="w-12 h-16 object-cover rounded shadow-sm hover:shadow-md transition-shadow"
+                                  className="w-12 h-16 object-cover rounded shadow-sm hover:shadow-md transition-shadow border border-emerald-200"
                                 />
                               </Link>
                             ) : (
-                              <div className="w-12 h-16 bg-sonics-green/20 rounded" />
+                              <div className="w-12 h-16 bg-emerald-100 rounded" />
                             )
                           ) : (
-                            <div className="w-12 h-16 bg-gray-800 rounded border border-dashed border-gray-600 flex items-center justify-center">
-                              <span className="text-gray-600 text-lg">?</span>
+                            <div className="w-12 h-16 bg-stone-100 rounded border border-dashed border-stone-300 flex items-center justify-center">
+                              <span className="text-stone-400 text-lg">?</span>
                             </div>
                           )}
                         </td>
@@ -505,23 +505,23 @@ export default function SeriesDetail() {
                           {isRead ? (
                             <RatingBackboards rating={book.rating} />
                           ) : (
-                            <span className="text-gray-600">—</span>
+                            <span className="text-stone-400">—</span>
                           )}
                         </td>
 
                         {/* Title */}
                         <td className="px-4 py-4">
                           {isRead ? (
-                            <Link to={`/book/${book.id}`} className="block hover:text-sonics-gold transition-colors">
+                            <Link to={`/book/${book.id}`} className="block hover:text-emerald-700 transition-colors">
                               <div
-                                className="font-semibold text-white"
+                                className="font-semibold text-stone-800"
                                 style={{ fontFamily: 'var(--font-family-display)' }}
                               >
                                 {book.title}
                               </div>
                             </Link>
                           ) : (
-                            <div className="text-gray-500 italic">Coming soon...</div>
+                            <div className="text-stone-400 italic">Coming soon...</div>
                           )}
                         </td>
 
@@ -529,24 +529,24 @@ export default function SeriesDetail() {
                         <td className="px-4 py-4">
                           {isRead && mainCharacter && player ? (
                             <div
-                              className="text-sonics-gold"
+                              className="text-amber-600"
                               style={{ fontFamily: 'var(--font-family-display)' }}
                             >
-                              {mainCharacter.name} <span className="text-gray-500 font-normal">is</span> {player.name}
+                              {mainCharacter.name} <span className="text-stone-500 font-normal">is</span> {player.name}
                             </div>
                           ) : (
-                            <span className="text-gray-600">—</span>
+                            <span className="text-stone-400">—</span>
                           )}
                         </td>
 
                         {/* Tagline */}
                         <td className="px-4 py-4 hidden md:table-cell">
                           {isRead && mainCharacter?.tagline ? (
-                            <span className="text-gray-400 italic text-sm">
+                            <span className="text-stone-500 italic text-sm">
                               "{mainCharacter.tagline}"
                             </span>
                           ) : (
-                            <span className="text-gray-600">—</span>
+                            <span className="text-stone-400">—</span>
                           )}
                         </td>
                       </tr>
@@ -559,7 +559,7 @@ export default function SeriesDetail() {
         </section>
       </main>
 
-      <footer className="border-t border-sonics-green/20 py-8 text-center text-gray-500 text-sm mt-12">
+      <footer className="border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
         <p>Where fantasy meets the hardwood</p>
       </footer>
     </div>

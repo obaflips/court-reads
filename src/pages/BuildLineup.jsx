@@ -159,36 +159,36 @@ export default function BuildLineup() {
         <main className="max-w-6xl mx-auto px-4 py-8">
           {/* Page Title skeleton */}
           <div className="text-center mb-8 animate-pulse">
-            <div className="h-10 bg-sonics-green/20 rounded w-80 mx-auto mb-3" />
-            <div className="h-4 bg-sonics-green/20 rounded w-64 mx-auto" />
+            <div className="h-10 bg-emerald-200 rounded w-80 mx-auto mb-3" />
+            <div className="h-4 bg-emerald-200 rounded w-64 mx-auto" />
           </div>
 
           {/* Mode Toggle skeleton */}
           <div className="flex justify-center mb-6">
-            <div className="h-12 bg-sonics-green/20 rounded-lg w-64 animate-pulse" />
+            <div className="h-12 bg-emerald-200 rounded-lg w-64 animate-pulse" />
           </div>
 
           {/* Position Toggle skeleton */}
           <div className="flex justify-center mb-6">
-            <div className="h-8 bg-sonics-green/20 rounded w-80 animate-pulse" />
+            <div className="h-8 bg-emerald-200 rounded w-80 animate-pulse" />
           </div>
 
           {/* Selection Count skeleton */}
           <div className="flex items-center justify-between mb-6 animate-pulse">
-            <div className="h-8 bg-sonics-green/20 rounded w-32" />
-            <div className="h-10 bg-sonics-green/20 rounded w-32" />
+            <div className="h-8 bg-emerald-200 rounded w-32" />
+            <div className="h-10 bg-emerald-200 rounded w-32" />
           </div>
 
           {/* Grid skeleton */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="border border-sonics-green/20 rounded-xl p-4 animate-pulse">
+              <div key={i} className="bg-white border-2 border-emerald-200 rounded-xl p-4 animate-pulse">
                 <div className="flex gap-3">
-                  <div className="w-16 h-24 bg-sonics-green/20 rounded" />
+                  <div className="w-16 h-24 bg-emerald-100 rounded" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-5 bg-sonics-green/20 rounded w-3/4" />
-                    <div className="h-4 bg-sonics-green/20 rounded w-1/2" />
-                    <div className="h-3 bg-sonics-green/20 rounded w-16 mt-2" />
+                    <div className="h-5 bg-emerald-100 rounded w-3/4" />
+                    <div className="h-4 bg-emerald-100 rounded w-1/2" />
+                    <div className="h-3 bg-emerald-100 rounded w-16 mt-2" />
                   </div>
                 </div>
               </div>
@@ -204,13 +204,13 @@ export default function BuildLineup() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
           <div
-            className="text-4xl font-bold text-sonics-gold"
+            className="text-4xl font-bold text-emerald-800"
             style={{ fontFamily: 'var(--font-family-display)' }}
           >
             TECHNICAL FOUL
           </div>
-          <p className="text-red-400 mt-4">{error}</p>
-          <Link to="/" className="inline-block mt-6 text-sonics-green hover:text-sonics-gold transition-colors">
+          <p className="text-red-600 mt-4">{error}</p>
+          <Link to="/" className="inline-block mt-6 text-emerald-700 hover:text-amber-600 transition-colors">
             ← Back to Home
           </Link>
         </div>
@@ -226,12 +226,12 @@ export default function BuildLineup() {
         {/* Page Title */}
         <div className="text-center mb-8">
           <h2
-            className="text-3xl md:text-4xl font-bold text-white"
+            className="text-3xl md:text-4xl font-bold text-emerald-800"
             style={{ fontFamily: 'var(--font-family-display)' }}
           >
             BUILD YOUR STARTING 5
           </h2>
-          <p className="text-gray-400 mt-2">
+          <p className="text-stone-600 mt-2">
             {mode === MODES.BOOK
               ? 'Pick 5 books to reveal your fantasy basketball lineup'
               : 'Pick 5 players to see which books match them'}
@@ -242,13 +242,13 @@ export default function BuildLineup() {
           <>
             {/* Mode Toggle */}
             <div className="flex justify-center mb-6">
-              <div className="inline-flex rounded-lg border border-sonics-green/30 p-1 bg-sonics-dark">
+              <div className="inline-flex rounded-lg border-2 border-emerald-600 p-1 bg-white">
                 <button
                   onClick={() => handleModeSwitch(MODES.BOOK)}
                   className={`px-6 py-2 rounded-md font-medium transition-all ${
                     mode === MODES.BOOK
-                      ? 'bg-sonics-green text-white'
-                      : 'text-gray-400 hover:text-white'
+                      ? 'bg-emerald-700 text-white'
+                      : 'text-emerald-700 hover:bg-emerald-50'
                   }`}
                 >
                   Pick by Book
@@ -257,8 +257,8 @@ export default function BuildLineup() {
                   onClick={() => handleModeSwitch(MODES.PLAYER)}
                   className={`px-6 py-2 rounded-md font-medium transition-all ${
                     mode === MODES.PLAYER
-                      ? 'bg-sonics-green text-white'
-                      : 'text-gray-400 hover:text-white'
+                      ? 'bg-emerald-700 text-white'
+                      : 'text-emerald-700 hover:bg-emerald-50'
                   }`}
                 >
                   Pick by Player
@@ -269,20 +269,20 @@ export default function BuildLineup() {
             {/* Position Rules Toggle */}
             <div className="flex justify-center mb-6">
               <label className="flex items-center gap-3 cursor-pointer">
-                <span className="text-gray-400">Enforce Position Rules</span>
+                <span className="text-stone-600">Enforce Position Rules</span>
                 <div
                   className={`relative w-12 h-6 rounded-full transition-colors ${
-                    enforcePositions ? 'bg-sonics-green' : 'bg-gray-600'
+                    enforcePositions ? 'bg-emerald-600' : 'bg-stone-300'
                   }`}
                   onClick={() => setEnforcePositions(!enforcePositions)}
                 >
                   <div
-                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform shadow ${
                       enforcePositions ? 'translate-x-7' : 'translate-x-1'
                     }`}
                   />
                 </div>
-                <span className="text-xs text-gray-500">(2+ guards, 2+ forwards/centers)</span>
+                <span className="text-xs text-stone-500">(2+ guards, 2+ forwards/centers)</span>
               </label>
             </div>
 
@@ -292,17 +292,17 @@ export default function BuildLineup() {
                 className="text-2xl font-bold"
                 style={{ fontFamily: 'var(--font-family-display)' }}
               >
-                <span className={selections.length === 5 ? 'text-sonics-gold' : 'text-white'}>
+                <span className={selections.length === 5 ? 'text-amber-600' : 'text-emerald-800'}>
                   {selections.length}
                 </span>
-                <span className="text-gray-500">/5</span>
-                <span className="text-gray-400 text-lg ml-2">Selected</span>
+                <span className="text-stone-400">/5</span>
+                <span className="text-stone-500 text-lg ml-2">Selected</span>
               </div>
               <div className="flex gap-3">
                 {selections.length > 0 && (
                   <button
                     onClick={handleStartOver}
-                    className="px-4 py-2 text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 rounded-lg transition-colors"
+                    className="px-4 py-2 text-stone-600 hover:text-stone-800 border border-stone-300 hover:border-stone-400 rounded-lg transition-colors"
                   >
                     Start Over
                   </button>
@@ -312,8 +312,8 @@ export default function BuildLineup() {
                   disabled={selections.length !== 5}
                   className={`px-6 py-2 rounded-lg font-semibold transition-all ${
                     selections.length === 5
-                      ? 'bg-sonics-gold text-sonics-dark hover:bg-sonics-gold/90'
-                      : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      ? 'bg-amber-500 text-white hover:bg-amber-600'
+                      : 'bg-stone-200 text-stone-400 cursor-not-allowed'
                   }`}
                 >
                   Build Lineup
@@ -323,7 +323,7 @@ export default function BuildLineup() {
 
             {/* Validation Error */}
             {validationError && (
-              <div className="mb-6 p-4 bg-red-900/30 border border-red-500/50 rounded-lg text-red-400 text-center">
+              <div className="mb-6 p-4 bg-red-50 border-2 border-red-400 rounded-lg text-red-600 text-center">
                 {validationError}
               </div>
             )}
@@ -343,12 +343,12 @@ export default function BuildLineup() {
                       key={id}
                       onClick={() => handleSelect(id)}
                       disabled={isDisabled}
-                      className={`p-4 rounded-xl border text-left transition-all ${
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${
                         isSelected
-                          ? 'border-sonics-gold bg-sonics-gold/10'
+                          ? 'border-amber-500 bg-amber-50'
                           : isDisabled
-                          ? 'border-gray-700 bg-gray-800/50 opacity-50 cursor-not-allowed'
-                          : 'border-sonics-green/30 bg-sonics-green/5 hover:border-sonics-green/60 hover:bg-sonics-green/10'
+                          ? 'border-stone-200 bg-stone-100 opacity-50 cursor-not-allowed'
+                          : 'border-emerald-200 bg-white hover:border-emerald-400 hover:bg-emerald-50'
                       }`}
                     >
                       <div className="flex gap-3">
@@ -359,31 +359,31 @@ export default function BuildLineup() {
                             className="w-16 h-24 object-cover rounded shadow-sm flex-shrink-0"
                           />
                         ) : (
-                          <div className="w-16 h-24 bg-sonics-green/20 rounded flex-shrink-0" />
+                          <div className="w-16 h-24 bg-emerald-100 rounded flex-shrink-0" />
                         )}
                         <div className="flex-1 min-w-0">
                           <div
-                            className={`font-semibold truncate ${isSelected ? 'text-sonics-gold' : 'text-white'}`}
+                            className={`font-semibold truncate ${isSelected ? 'text-amber-700' : 'text-emerald-800'}`}
                             style={{ fontFamily: 'var(--font-family-display)' }}
                           >
                             {book.title}
                           </div>
-                          <div className="text-sm text-gray-400 truncate">{book.author}</div>
+                          <div className="text-sm text-stone-500 truncate">{book.author}</div>
                           {player && (
-                            <div className="mt-2 text-xs text-sonics-green">
+                            <div className="mt-2 text-xs text-emerald-700">
                               {player.position && <span className="mr-2">{player.position}</span>}
                               {isGuard(player.position) && (
-                                <span className="px-1.5 py-0.5 bg-blue-900/50 text-blue-400 rounded">G</span>
+                                <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">G</span>
                               )}
                               {isFrontcourt(player.position) && (
-                                <span className="px-1.5 py-0.5 bg-orange-900/50 text-orange-400 rounded">F/C</span>
+                                <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">F/C</span>
                               )}
                             </div>
                           )}
                         </div>
                         {isSelected && (
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sonics-gold flex items-center justify-center">
-                            <svg className="w-4 h-4 text-sonics-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
@@ -398,44 +398,44 @@ export default function BuildLineup() {
                       key={id}
                       onClick={() => handleSelect(id)}
                       disabled={isDisabled}
-                      className={`p-4 rounded-xl border text-left transition-all ${
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${
                         isSelected
-                          ? 'border-sonics-gold bg-sonics-gold/10'
+                          ? 'border-amber-500 bg-amber-50'
                           : isDisabled
-                          ? 'border-gray-700 bg-gray-800/50 opacity-50 cursor-not-allowed'
-                          : 'border-sonics-green/30 bg-sonics-green/5 hover:border-sonics-green/60 hover:bg-sonics-green/10'
+                          ? 'border-stone-200 bg-stone-100 opacity-50 cursor-not-allowed'
+                          : 'border-emerald-200 bg-white hover:border-emerald-400 hover:bg-emerald-50'
                       }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
                           <div
-                            className={`text-2xl font-bold ${isSelected ? 'text-sonics-gold' : 'text-sonics-gold/70'}`}
+                            className={`text-2xl font-bold ${isSelected ? 'text-amber-600' : 'text-amber-500'}`}
                             style={{ fontFamily: 'var(--font-family-display)' }}
                           >
                             #{playerItem.number || '00'}
                           </div>
                           <div
-                            className={`font-semibold mt-1 ${isSelected ? 'text-sonics-gold' : 'text-white'}`}
+                            className={`font-semibold mt-1 ${isSelected ? 'text-amber-700' : 'text-emerald-800'}`}
                             style={{ fontFamily: 'var(--font-family-display)' }}
                           >
                             {playerItem.name}
                           </div>
-                          <div className="text-sm text-gray-400">{playerItem.currentTeam}</div>
+                          <div className="text-sm text-stone-500">{playerItem.currentTeam}</div>
                           <div className="mt-2 text-xs">
                             {playerItem.position && (
-                              <span className="text-gray-500 mr-2">{playerItem.position}</span>
+                              <span className="text-stone-500 mr-2">{playerItem.position}</span>
                             )}
                             {isGuard(playerItem.position) && (
-                              <span className="px-1.5 py-0.5 bg-blue-900/50 text-blue-400 rounded">G</span>
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">G</span>
                             )}
                             {isFrontcourt(playerItem.position) && (
-                              <span className="px-1.5 py-0.5 bg-orange-900/50 text-orange-400 rounded">F/C</span>
+                              <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">F/C</span>
                             )}
                           </div>
                         </div>
                         {isSelected && (
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sonics-gold flex items-center justify-center">
-                            <svg className="w-4 h-4 text-sonics-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
@@ -452,7 +452,7 @@ export default function BuildLineup() {
           <div>
             <div className="text-center mb-8">
               <h3
-                className="text-2xl font-bold text-sonics-gold"
+                className="text-2xl font-bold text-amber-600"
                 style={{ fontFamily: 'var(--font-family-display)' }}
               >
                 YOUR STARTING 5
@@ -463,12 +463,12 @@ export default function BuildLineup() {
               {lineup.map((item, index) => (
                 <div
                   key={index}
-                  className="border border-sonics-green/30 rounded-xl bg-gradient-to-r from-sonics-green/10 to-transparent p-6"
+                  className="bg-white border-4 border-emerald-600 rounded-xl p-6 shadow-lg"
                 >
                   <div className="flex flex-col md:flex-row gap-6 items-center">
                     {/* Jersey Number */}
                     <div
-                      className="text-5xl font-bold text-sonics-gold/30 w-20 text-center flex-shrink-0"
+                      className="text-5xl font-bold text-amber-400 w-20 text-center flex-shrink-0"
                       style={{ fontFamily: 'var(--font-family-display)' }}
                     >
                       #{item.player?.number || '00'}
@@ -479,33 +479,33 @@ export default function BuildLineup() {
                       <img
                         src={item.book.coverUrl}
                         alt={item.book.title}
-                        className="w-20 h-28 object-cover rounded shadow-lg flex-shrink-0"
+                        className="w-20 h-28 object-cover rounded shadow-lg flex-shrink-0 border border-emerald-200"
                       />
                     ) : (
-                      <div className="w-20 h-28 bg-sonics-green/20 rounded flex-shrink-0" />
+                      <div className="w-20 h-28 bg-emerald-100 rounded flex-shrink-0" />
                     )}
 
                     {/* Comp Info */}
                     <div className="flex-1 text-center md:text-left">
                       <div
-                        className="text-xl md:text-2xl font-bold text-sonics-gold"
+                        className="text-xl md:text-2xl font-bold text-amber-600"
                         style={{ fontFamily: 'var(--font-family-display)' }}
                       >
                         {item.character?.name || 'Unknown'}
-                        <span className="text-white mx-2">is</span>
+                        <span className="text-emerald-700 mx-2">is</span>
                         {item.player?.name || 'Unknown'}
                       </div>
                       {item.character?.tagline && (
-                        <p className="text-gray-400 mt-1 italic">"{item.character.tagline}"</p>
+                        <p className="text-stone-500 mt-1 italic">"{item.character.tagline}"</p>
                       )}
                       <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-3">
-                        <div className="text-sm text-gray-500">
-                          <span className="text-gray-400">{item.book?.title}</span>
+                        <div className="text-sm text-stone-500">
+                          <span className="text-stone-700">{item.book?.title}</span>
                           <span className="mx-1">•</span>
                           {item.book?.author}
                         </div>
                         {item.player?.position && (
-                          <span className="text-xs px-2 py-1 bg-sonics-green/20 text-sonics-green rounded">
+                          <span className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded font-semibold">
                             {item.player.position}
                           </span>
                         )}
@@ -525,7 +525,7 @@ export default function BuildLineup() {
             <div className="text-center mt-8">
               <button
                 onClick={handleStartOver}
-                className="px-8 py-3 bg-sonics-gold text-sonics-dark font-semibold rounded-lg hover:bg-sonics-gold/90 transition-colors"
+                className="px-8 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors"
               >
                 Build Another Lineup
               </button>
@@ -534,7 +534,7 @@ export default function BuildLineup() {
         )}
       </main>
 
-      <footer className="border-t border-sonics-green/20 py-8 text-center text-gray-500 text-sm mt-12">
+      <footer className="border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
         <p>Where fantasy meets the hardwood</p>
       </footer>
     </div>

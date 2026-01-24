@@ -22,8 +22,8 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-40 bg-sonics-green shadow-lg">
-        <div className="max-w-6xl mx-auto px-4">
+      <nav className="fixed top-0 left-0 right-0 z-40 bg-white border-b-4 border-emerald-700 shadow-md">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link
@@ -31,8 +31,8 @@ export default function Navbar() {
               className="flex items-center gap-2 hover:opacity-90 transition-opacity"
             >
               <span
-                className="text-2xl md:text-3xl font-black tracking-tight text-sonics-gold"
-                style={{ fontFamily: 'var(--font-family-display)' }}
+                className="text-2xl md:text-3xl font-black tracking-tight text-emerald-800"
+                style={{ fontFamily: 'var(--font-family-impact)' }}
               >
                 COURT READS
               </span>
@@ -44,10 +44,10 @@ export default function Navbar() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sonics-gold focus:ring-offset-2 focus:ring-offset-sonics-green ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 ${
                     isActive(link.path)
-                      ? 'bg-sonics-gold text-sonics-dark'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white'
+                      ? 'bg-emerald-700 text-white'
+                      : 'text-emerald-700 hover:bg-emerald-50'
                   }`}
                 >
                   {link.label}
@@ -55,7 +55,7 @@ export default function Navbar() {
               ))}
               <button
                 onClick={handleSurpriseClick}
-                className="ml-2 px-4 py-2 bg-sonics-gold text-sonics-dark font-bold rounded-lg hover:bg-sonics-gold/90 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-sonics-green"
+                className="ml-2 px-4 py-2 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                 style={{ fontFamily: 'var(--font-family-display)' }}
               >
                 SURPRISE ME
@@ -65,7 +65,7 @@ export default function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-sonics-gold"
+              className="md:hidden p-2 text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
             >
@@ -88,16 +88,16 @@ export default function Navbar() {
             mobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="px-4 py-3 space-y-1 bg-sonics-green border-t border-white/10">
+          <div className="px-4 py-3 space-y-1 bg-white border-t border-emerald-200">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sonics-gold focus:ring-inset ${
+                className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
                   isActive(link.path)
-                    ? 'bg-sonics-gold text-sonics-dark'
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    ? 'bg-emerald-700 text-white'
+                    : 'text-emerald-700 hover:bg-emerald-50'
                 }`}
               >
                 {link.label}
@@ -105,7 +105,7 @@ export default function Navbar() {
             ))}
             <button
               onClick={handleSurpriseClick}
-              className="w-full mt-2 px-4 py-3 bg-sonics-gold text-sonics-dark font-bold rounded-lg hover:bg-sonics-gold/90 transition-colors text-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-inset"
+              className="w-full mt-2 px-4 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 transition-colors text-center focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-inset"
               style={{ fontFamily: 'var(--font-family-display)' }}
             >
               SURPRISE ME
