@@ -4,6 +4,7 @@ import BookDetail from './pages/BookDetail'
 import BuildLineup from './pages/BuildLineup'
 import HallOfFame from './pages/HallOfFame'
 import SeriesDetail from './pages/SeriesDetail'
+import Draft from './pages/Draft'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Route path="/build-lineup" element={<BuildLineup />} />
       <Route path="/hall-of-fame" element={<HallOfFame />} />
       <Route path="/series/:seriesId" element={<SeriesDetail />} />
+      <Route path="/draft" element={<Draft />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

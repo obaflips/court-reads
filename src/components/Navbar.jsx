@@ -12,6 +12,7 @@ export default function Navbar() {
   const navLinks = [
     { path: '/', label: 'Home' },
     { path: '/build-lineup', label: 'Build Lineup' },
+    { path: '/draft', label: 'Fantasy Draft' },
     { path: '/hall-of-fame', label: 'Hall of Fame' },
   ]
 
