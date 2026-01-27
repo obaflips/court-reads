@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllData } from '../api/airtable'
+import { getPlayerStats } from '../api/nbaStats'
 import Header from '../components/Header'
 import RatingBackboards from '../components/RatingBackboards'
+import LineupReveal from '../components/LineupReveal'
+import GameSimulationModal from '../components/GameSimulationModal'
+import { generateTeamName } from '../utils/teamNameGenerator'
+import { simulateGame, formatTeamStats, calculateTeamStats } from '../utils/gameSimulator'
 
 const MODES = {
   BOOK: 'book',
@@ -32,6 +37,21 @@ export default function BuildLineup() {
   const [enforcePositions, setEnforcePositions] = useState(false)
   const [lineup, setLineup] = useState(null)
   const [validationError, setValidationError] = useState(null)
+
+  // Enhanced lineup state
+  const [teamName, setTeamName] = useState('')
+  const [teamStats, setTeamStats] = useState(null)
+  const [lineupWithStats, setLineupWithStats] = useState(null)
+  const [statsLoading, setStatsLoading] = useState(false)
+
+  // Simulation state
+  const [showSimModal, setShowSimModal] = useState(false)
+  const [simLoading, setSimLoading] = useState(false)
+  const [simResult, setSimResult] = useState(null)
+  const [hofLineup, setHofLineup] = useState(null)
+
+  // Reveal state
+  const [revealComplete, setRevealComplete] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -143,6 +163,128 @@ export default function BuildLineup() {
     setSelections([])
     setLineup(null)
     setValidationError(null)
+    setTeamName('')
+    setTeamStats(null)
+    setLineupWithStats(null)
+    setSimResult(null)
+    setHofLineup(null)
+    setRevealComplete(false)
+  }
+
+  // Fetch stats when lineup is built
+  useEffect(() => {
+    if (!lineup || lineup.length === 0) return
+
+    async function fetchLineupStats() {
+      setStatsLoading(true)
+      try {
+        // Fetch stats for each player in lineup
+        const lineupWithPlayerStats = await Promise.all(
+          lineup.map(async (item) => {
+            const playerName = item.player?.name
+            if (playerName) {
+              const stats = await getPlayerStats(playerName)
+              return { ...item, playerStats: stats }
+            }
+            return { ...item, playerStats: { ppg: 15, rpg: 5, apg: 3 } }
+          })
+        )
+
+        setLineupWithStats(lineupWithPlayerStats)
+
+        // Calculate aggregate team stats
+        const players = lineupWithPlayerStats.map(item => ({
+          stats: item.playerStats
+        }))
+        const aggregateStats = calculateTeamStats(players)
+        setTeamStats(formatTeamStats(aggregateStats))
+
+        // Generate team name
+        const generatedName = generateTeamName(lineup)
+        setTeamName(generatedName)
+      } catch (err) {
+        console.error('Error fetching lineup stats:', err)
+      } finally {
+        setStatsLoading(false)
+      }
+    }
+
+    fetchLineupStats()
+  }, [lineup])
+
+  // Handle challenge button click
+  const handleChallengeHOF = async () => {
+    setShowSimModal(true)
+    setSimLoading(true)
+    setSimResult(null)
+
+    try {
+      // Get Hall of Fame books (top 5 rated)
+      const hofBooks = (data?.books || [])
+        .filter(book => book.rating > 0 && book.characters?.some(char => char.player))
+        .sort((a, b) => {
+          if (b.rating !== a.rating) return b.rating - a.rating
+          return new Date(b.dateFinished) - new Date(a.dateFinished)
+        })
+        .slice(0, 5)
+
+      // Build HOF lineup with stats
+      const hofLineupData = await Promise.all(
+        hofBooks.map(async (book) => {
+          const character = book.characters?.[0]
+          const player = character?.player
+          const playerName = player?.name
+          const stats = playerName
+            ? await getPlayerStats(playerName)
+            : { ppg: 15, rpg: 5, apg: 3 }
+          return {
+            book,
+            character,
+            player,
+            playerStats: stats
+          }
+        })
+      )
+
+      setHofLineup(hofLineupData)
+
+      // Run simulation
+      const result = simulateGame({
+        userLineup: lineupWithStats || lineup,
+        hofLineup: hofLineupData,
+        userTeamName: teamName
+      })
+
+      setSimResult(result)
+    } catch (err) {
+      console.error('Error running simulation:', err)
+    } finally {
+      setSimLoading(false)
+    }
+  }
+
+  const handlePlayAgain = async () => {
+    setSimLoading(true)
+    setSimResult(null)
+
+    try {
+      // Re-run simulation with same lineups
+      const result = simulateGame({
+        userLineup: lineupWithStats || lineup,
+        hofLineup: hofLineup,
+        userTeamName: teamName
+      })
+      setSimResult(result)
+    } catch (err) {
+      console.error('Error re-running simulation:', err)
+    } finally {
+      setSimLoading(false)
+    }
+  }
+
+  const handleBuildNewLineup = () => {
+    setShowSimModal(false)
+    handleStartOver()
   }
 
   const handleModeSwitch = (newMode) => {
@@ -448,90 +590,164 @@ export default function BuildLineup() {
             </div>
           </>
         ) : (
-          /* Lineup Results */
+          /* Enhanced Lineup Results with Reveal */
           <div>
-            <div className="text-center mb-8">
+            {/* Team Name */}
+            <div className="text-center mb-6">
+              <div className="text-sm text-emerald-600 uppercase tracking-widest mb-2">
+                Introducing
+              </div>
               <h3
-                className="text-2xl font-bold text-amber-600"
+                className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
                 style={{ fontFamily: 'var(--font-family-display)' }}
               >
-                YOUR STARTING 5
+                {teamName || 'YOUR STARTING 5'}
               </h3>
             </div>
 
-            <div className="space-y-4">
-              {lineup.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-white border-4 border-emerald-600 rounded-xl p-6 shadow-lg"
-                >
-                  <div className="flex flex-col md:flex-row gap-6 items-center">
-                    {/* Jersey Number */}
+            {/* Lineup Reveal Animation */}
+            {!revealComplete ? (
+              <div className="bg-white rounded-2xl border-4 border-emerald-600 p-6 shadow-xl mb-8">
+                <LineupReveal
+                  lineup={lineup}
+                  lineupWithStats={lineupWithStats}
+                  onRevealComplete={() => setRevealComplete(true)}
+                />
+              </div>
+            ) : (
+              <>
+                {/* Aggregate Team Stats */}
+                {teamStats && !statsLoading && (
+                  <div className="bg-emerald-800 rounded-xl p-4 mb-8">
                     <div
-                      className="text-5xl font-bold text-amber-400 w-20 text-center flex-shrink-0"
+                      className="text-center text-white font-bold"
                       style={{ fontFamily: 'var(--font-family-display)' }}
                     >
-                      #{item.player?.number || '00'}
-                    </div>
-
-                    {/* Book Cover */}
-                    {item.book?.coverUrl ? (
-                      <img
-                        src={item.book.coverUrl}
-                        alt={item.book.title}
-                        className="w-20 h-28 object-cover rounded shadow-lg flex-shrink-0 border border-emerald-200"
-                      />
-                    ) : (
-                      <div className="w-20 h-28 bg-emerald-100 rounded flex-shrink-0" />
-                    )}
-
-                    {/* Comp Info */}
-                    <div className="flex-1 text-center md:text-left">
-                      <div
-                        className="text-xl md:text-2xl font-bold text-amber-600"
-                        style={{ fontFamily: 'var(--font-family-display)' }}
-                      >
-                        {item.character?.name || 'Unknown'}
-                        <span className="text-emerald-700 mx-2">is</span>
-                        {item.player?.name || 'Unknown'}
+                      <span className="text-emerald-300 text-sm uppercase tracking-wider">Team Totals:</span>
+                      <div className="flex justify-center gap-6 md:gap-10 mt-2 text-lg md:text-xl">
+                        <span>
+                          <span className="text-amber-400">{teamStats.ppg}</span>
+                          <span className="text-emerald-300 text-sm ml-1">PPG</span>
+                        </span>
+                        <span className="text-emerald-500">|</span>
+                        <span>
+                          <span className="text-amber-400">{teamStats.rpg}</span>
+                          <span className="text-emerald-300 text-sm ml-1">RPG</span>
+                        </span>
+                        <span className="text-emerald-500">|</span>
+                        <span>
+                          <span className="text-amber-400">{teamStats.apg}</span>
+                          <span className="text-emerald-300 text-sm ml-1">APG</span>
+                        </span>
                       </div>
-                      {item.character?.tagline && (
-                        <p className="text-stone-500 mt-1 italic">"{item.character.tagline}"</p>
-                      )}
-                      <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-3">
-                        <div className="text-sm text-stone-500">
-                          <span className="text-stone-700">{item.book?.title}</span>
-                          <span className="mx-1">•</span>
-                          {item.book?.author}
-                        </div>
-                        {item.player?.position && (
-                          <span className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded font-semibold">
-                            {item.player.position}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Rating */}
-                    <div className="flex-shrink-0">
-                      <RatingBackboards rating={item.book?.rating} />
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                )}
 
-            {/* Build Another Button */}
-            <div className="text-center mt-8">
-              <button
-                onClick={handleStartOver}
-                className="px-8 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors"
-              >
-                Build Another Lineup
-              </button>
-            </div>
+                {statsLoading && (
+                  <div className="bg-emerald-800/50 rounded-xl p-4 mb-8 animate-pulse">
+                    <div className="h-12 bg-emerald-700/50 rounded" />
+                  </div>
+                )}
+
+                {/* Lineup Cards */}
+                <div className="space-y-4 mb-8">
+                  {lineup.map((item, index) => (
+                    <div
+                      key={index}
+                      className="bg-white border-4 border-emerald-600 rounded-xl p-6 shadow-lg"
+                    >
+                      <div className="flex flex-col md:flex-row gap-6 items-center">
+                        {/* Jersey Number */}
+                        <div
+                          className="text-5xl font-bold text-amber-400 w-20 text-center flex-shrink-0"
+                          style={{ fontFamily: 'var(--font-family-display)' }}
+                        >
+                          #{item.player?.number || '00'}
+                        </div>
+
+                        {/* Book Cover */}
+                        {item.book?.coverUrl ? (
+                          <img
+                            src={item.book.coverUrl}
+                            alt={item.book.title}
+                            className="w-20 h-28 object-cover rounded shadow-lg flex-shrink-0 border border-emerald-200"
+                          />
+                        ) : (
+                          <div className="w-20 h-28 bg-emerald-100 rounded flex-shrink-0" />
+                        )}
+
+                        {/* Comp Info */}
+                        <div className="flex-1 text-center md:text-left">
+                          <div
+                            className="text-xl md:text-2xl font-bold text-amber-600"
+                            style={{ fontFamily: 'var(--font-family-display)' }}
+                          >
+                            {item.character?.name || 'Unknown'}
+                            <span className="text-emerald-700 mx-2">is</span>
+                            {item.player?.name || 'Unknown'}
+                          </div>
+                          {item.character?.tagline && (
+                            <p className="text-stone-500 mt-1 italic">"{item.character.tagline}"</p>
+                          )}
+                          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-3">
+                            <div className="text-sm text-stone-500">
+                              <span className="text-stone-700">{item.book?.title}</span>
+                              <span className="mx-1">•</span>
+                              {item.book?.author}
+                            </div>
+                            {item.player?.position && (
+                              <span className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded font-semibold">
+                                {item.player.position}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Rating */}
+                        <div className="flex-shrink-0">
+                          <RatingBackboards rating={item.book?.rating} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  {/* Challenge Button */}
+                  <button
+                    onClick={handleChallengeHOF}
+                    disabled={statsLoading}
+                    className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-lg rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    style={{ fontFamily: 'var(--font-family-display)' }}
+                  >
+                    CHALLENGE THE HALL OF FAME
+                  </button>
+
+                  {/* Build Another Button */}
+                  <button
+                    onClick={handleStartOver}
+                    className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-colors"
+                  >
+                    Build Another Lineup
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
+
+        {/* Game Simulation Modal */}
+        <GameSimulationModal
+          isOpen={showSimModal}
+          onClose={() => setShowSimModal(false)}
+          onPlayAgain={handlePlayAgain}
+          onBuildNewLineup={handleBuildNewLineup}
+          simulationResult={simResult}
+          userTeamName={teamName}
+          isLoading={simLoading}
+        />
       </main>
 
       <footer className="border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
