@@ -44,7 +44,7 @@ export default function Home() {
                 DRAFT YOUR TEAM
               </h3>
               <p className="text-stone-600 text-sm">
-                Pick your favorite NBA players in a fantasy draft against AI opponents, or use Quick Pick to grab your starting 5.
+                Pick epic fantasy characters in a draft against AI opponents, or use Quick Pick to grab your starting 5.
               </p>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function Home() {
                 GET YOUR READS
               </h3>
               <p className="text-stone-600 text-sm">
-                Every player on my reading list is matched to a fantasy book character. Your picks reveal your personalized reading list.
+                Every character on my reading list is matched to an NBA player. Your picks reveal your personalized reading list.
               </p>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function Home() {
                 CHALLENGE THE HALL
               </h3>
               <p className="text-stone-600 text-sm">
-                Simulate a game with your drafted team against the Hall of Fame — my top-rated reads of all time.
+                Simulate a game with your drafted team against the Hall of Fame — my top-rated reads since I started this project.
               </p>
             </div>
           </div>
