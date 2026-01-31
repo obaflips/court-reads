@@ -117,13 +117,13 @@ function HallOfFameCard({ book, rank }) {
                   {mainCharacter.name} <span className="text-gray-500">is</span> {player.name}
                 </div>
                 {mainCharacter.tagline && (
-                  <p className="text-gray-500 text-xs mt-1 italic line-clamp-2">"{mainCharacter.tagline}"</p>
+                  <p className="text-amber-200/80 text-xs mt-1 italic line-clamp-2">"{mainCharacter.tagline}"</p>
                 )}
               </div>
             )}
 
             {book.dateFinished && (
-              <p className="text-xs text-gray-600 mt-2">
+              <p className="text-xs text-gray-300 mt-2">
                 Inducted: {formatDate(book.dateFinished)}
               </p>
             )}
@@ -220,10 +220,10 @@ export default function HallOfFame() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen hardwood-bg court-lines">
       <Header />
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           {/* Trophy Icon */}
@@ -240,26 +240,8 @@ export default function HallOfFame() {
             HALL OF FAME
           </h1>
           <p className="text-gray-400 mt-4 text-lg">
-            The Top 5 Highest Rated Reads
+            My Top 5 Highest Rated Reads
           </p>
-        </div>
-
-        {/* Stats Banner */}
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex items-center gap-4 px-8 py-4 border border-amber-500/30 rounded-full bg-amber-950/30">
-            <TrophyIcon className="w-6 h-6 text-amber-400" />
-            <div>
-              <span
-                className="text-3xl font-bold text-amber-400"
-                style={{ fontFamily: 'var(--font-family-display)' }}
-              >
-                {books.length}
-              </span>
-              <span className="text-gray-400 ml-2">
-                {books.length === 1 ? 'Book' : 'Books'} Inducted
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Books Grid */}
@@ -279,7 +261,7 @@ export default function HallOfFame() {
       </main>
 
       <footer className="border-t border-amber-500/20 py-8 text-center text-gray-500 text-sm mt-12">
-        <p>Where legends are made</p>
+        <p>A personal project by a fantasy reader who watches too much basketball</p>
       </footer>
     </div>
   )

@@ -169,10 +169,10 @@ export default function BookDetail() {
   const embedUrl = player?.videoUrl ? getYouTubeEmbedUrl(player.videoUrl) : null
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen hardwood-bg court-lines">
       <Header />
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
         {/* Back Button */}
         <Link
           to="/"
@@ -379,7 +379,7 @@ export default function BookDetail() {
       </main>
 
       <footer className="border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
-        <p>Where fantasy meets the hardwood</p>
+        <p>A personal project by a fantasy reader who watches too much basketball</p>
       </footer>
     </div>
   )

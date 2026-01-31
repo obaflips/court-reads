@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function GameSimulationModal({
   isOpen,
@@ -9,8 +10,6 @@ export default function GameSimulationModal({
   userTeamName,
   isLoading
 }) {
-  const [showBoxScores, setShowBoxScores] = useState(false)
-
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -20,13 +19,6 @@ export default function GameSimulationModal({
     }
     return () => {
       document.body.style.overflow = ''
-    }
-  }, [isOpen])
-
-  // Reset state when modal closes
-  useEffect(() => {
-    if (!isOpen) {
-      setShowBoxScores(false)
     }
   }, [isOpen])
 
@@ -202,127 +194,83 @@ export default function GameSimulationModal({
               </div>
             )}
 
-            {/* Highlight Plays */}
-            {highlights && highlights.length > 0 && (
-              <div className="mb-6">
+            {/* Box Scores */}
+            <div className="mb-6 space-y-4">
+              <div
+                className="text-sm text-sonics-green uppercase tracking-widest"
+              >
+                Box Scores
+              </div>
+
+              {/* User Team Box Score */}
+              <div>
                 <div
-                  className="text-sm text-sonics-green uppercase tracking-widest mb-3"
+                  className="text-sm font-semibold text-sonics-gold mb-2"
+                  style={{ fontFamily: 'var(--font-family-display)' }}
                 >
-                  Game Highlights
+                  {userTeamName}
                 </div>
-                <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
-                  {highlights.map((highlight, index) => (
-                    <div
-                      key={index}
-                      className={`p-3 rounded-lg text-sm ${
-                        highlight.team === 'user'
-                          ? 'bg-sonics-green/10 border-l-4 border-sonics-green'
-                          : 'bg-gray-800/50 border-l-4 border-gray-600'
-                      }`}
-                    >
-                      <p className="text-gray-200">{highlight.text}</p>
-                    </div>
-                  ))}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-gray-500 text-xs uppercase">
+                        <th className="text-left py-1 px-2">Player</th>
+                        <th className="text-center py-1 px-2">PTS</th>
+                        <th className="text-center py-1 px-2">REB</th>
+                        <th className="text-center py-1 px-2">AST</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userBoxScore?.map((player, index) => (
+                        <tr key={index} className="border-t border-gray-800">
+                          <td className="py-2 px-2">
+                            <span className="text-white">{player.characterName}</span>
+                            <span className="text-gray-500 text-xs ml-1">#{player.number}</span>
+                          </td>
+                          <td className="text-center py-2 px-2 text-sonics-gold font-semibold">{player.points}</td>
+                          <td className="text-center py-2 px-2 text-gray-400">{player.rebounds}</td>
+                          <td className="text-center py-2 px-2 text-gray-400">{player.assists}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            )}
 
-            {/* Box Scores (Collapsible) */}
-            <div className="mb-6">
-              <button
-                onClick={() => setShowBoxScores(!showBoxScores)}
-                className="w-full flex items-center justify-between p-3 bg-black/20 rounded-lg hover:bg-black/30 transition-colors"
-              >
-                <span
-                  className="text-sm text-sonics-green uppercase tracking-widest"
+              {/* HOF Team Box Score */}
+              <div>
+                <div
+                  className="text-sm font-semibold text-gray-400 mb-2"
+                  style={{ fontFamily: 'var(--font-family-display)' }}
                 >
-                  Box Scores
-                </span>
-                <svg
-                  className={`w-5 h-5 text-sonics-green transition-transform ${
-                    showBoxScores ? 'rotate-180' : ''
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {showBoxScores && (
-                <div className="mt-4 space-y-4">
-                  {/* User Team Box Score */}
-                  <div>
-                    <div
-                      className="text-sm font-semibold text-sonics-gold mb-2"
-                      style={{ fontFamily: 'var(--font-family-display)' }}
-                    >
-                      {userTeamName}
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="text-gray-500 text-xs uppercase">
-                            <th className="text-left py-1 px-2">Player</th>
-                            <th className="text-center py-1 px-2">PTS</th>
-                            <th className="text-center py-1 px-2">REB</th>
-                            <th className="text-center py-1 px-2">AST</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {userBoxScore?.map((player, index) => (
-                            <tr key={index} className="border-t border-gray-800">
-                              <td className="py-2 px-2">
-                                <span className="text-white">{player.characterName}</span>
-                                <span className="text-gray-500 text-xs ml-1">#{player.number}</span>
-                              </td>
-                              <td className="text-center py-2 px-2 text-sonics-gold font-semibold">{player.points}</td>
-                              <td className="text-center py-2 px-2 text-gray-400">{player.rebounds}</td>
-                              <td className="text-center py-2 px-2 text-gray-400">{player.assists}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  {/* HOF Team Box Score */}
-                  <div>
-                    <div
-                      className="text-sm font-semibold text-gray-400 mb-2"
-                      style={{ fontFamily: 'var(--font-family-display)' }}
-                    >
-                      Hall of Fame Legends
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="text-gray-500 text-xs uppercase">
-                            <th className="text-left py-1 px-2">Player</th>
-                            <th className="text-center py-1 px-2">PTS</th>
-                            <th className="text-center py-1 px-2">REB</th>
-                            <th className="text-center py-1 px-2">AST</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {hofBoxScore?.map((player, index) => (
-                            <tr key={index} className="border-t border-gray-800">
-                              <td className="py-2 px-2">
-                                <span className="text-gray-300">{player.characterName}</span>
-                                <span className="text-gray-600 text-xs ml-1">#{player.number}</span>
-                              </td>
-                              <td className="text-center py-2 px-2 text-gray-300 font-semibold">{player.points}</td>
-                              <td className="text-center py-2 px-2 text-gray-500">{player.rebounds}</td>
-                              <td className="text-center py-2 px-2 text-gray-500">{player.assists}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                  Hall of Fame Legends
                 </div>
-              )}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-gray-500 text-xs uppercase">
+                        <th className="text-left py-1 px-2">Player</th>
+                        <th className="text-center py-1 px-2">PTS</th>
+                        <th className="text-center py-1 px-2">REB</th>
+                        <th className="text-center py-1 px-2">AST</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {hofBoxScore?.map((player, index) => (
+                        <tr key={index} className="border-t border-gray-800">
+                          <td className="py-2 px-2">
+                            <span className="text-gray-300">{player.characterName}</span>
+                            <span className="text-gray-600 text-xs ml-1">#{player.number}</span>
+                          </td>
+                          <td className="text-center py-2 px-2 text-gray-300 font-semibold">{player.points}</td>
+                          <td className="text-center py-2 px-2 text-gray-500">{player.rebounds}</td>
+                          <td className="text-center py-2 px-2 text-gray-500">{player.assists}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
             {/* Action Buttons */}
@@ -331,14 +279,23 @@ export default function GameSimulationModal({
                 onClick={onPlayAgain}
                 className="flex-1 text-center px-6 py-3 bg-sonics-gold text-sonics-dark font-semibold rounded-lg hover:bg-sonics-gold/90 transition-colors focus:outline-none focus:ring-2 focus:ring-sonics-gold focus:ring-offset-2 focus:ring-offset-sonics-dark"
               >
-                Play Again
+                Rematch
               </button>
               <button
                 onClick={onBuildNewLineup}
                 className="flex-1 px-6 py-3 border border-sonics-green text-sonics-green font-semibold rounded-lg hover:bg-sonics-green/10 transition-colors focus:outline-none focus:ring-2 focus:ring-sonics-green focus:ring-offset-2 focus:ring-offset-sonics-dark"
               >
-                Build New Lineup
+                Draft a New Team
               </button>
+            </div>
+            <div className="mt-3 text-center">
+              <Link
+                to="/scout-reports"
+                onClick={onClose}
+                className="text-sm text-gray-400 hover:text-sonics-gold transition-colors"
+              >
+                Explore Scout Reports →
+              </Link>
             </div>
           </div>
         ) : (

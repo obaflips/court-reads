@@ -452,10 +452,10 @@ export default function Draft() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen hardwood-bg court-lines">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 py-8">
         {/* Page Title */}
         <div className="text-center mb-8">
           <h2
@@ -475,7 +475,7 @@ export default function Draft() {
         {phase === PHASES.SETUP && (
           <div className="max-w-2xl mx-auto">
             {/* Draft Settings */}
-            <div className="bg-white rounded-xl border-2 border-emerald-200 p-6 mb-6">
+            <div className="bg-white rounded-xl border-4 border-emerald-700 p-6 mb-6">
               <h3
                 className="text-xl font-bold text-emerald-800 mb-4"
                 style={{ fontFamily: 'var(--font-family-display)' }}
@@ -656,10 +656,18 @@ export default function Draft() {
                 <div className="space-y-2">
                   {(rosters[userDraftPosition] || []).map((char, i) => (
                     <div key={i} className="flex items-center gap-2 text-sm">
-                      <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${getPositionColor(char.player?.position)}`}>
+                      <span className={`px-1.5 py-0.5 rounded text-xs font-medium flex-shrink-0 ${getPositionColor(char.player?.position)}`}>
                         {getPositionLabel(char.player?.position)}
                       </span>
-                      <span className="font-medium text-stone-800 truncate">{char.name}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-stone-800 truncate">{char.name}</div>
+                        <div className="text-xs text-stone-500 truncate">
+                          {char.player?.name}
+                          {char.player?.stats?.per && (
+                            <span className="text-amber-600 ml-1 font-mono">{char.player.stats.per.toFixed(1)} PER</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   ))}
                   {(rosters[userDraftPosition] || []).length === 0 && (
@@ -815,9 +823,24 @@ export default function Draft() {
               >
                 {teamName || 'YOUR TEAM'}
               </div>
-              <p className="text-emerald-200">
+              <p className="text-emerald-200 mb-6">
                 {numRounds} characters drafted and ready to compete
               </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={handleChallengeHOF}
+                  className="px-10 py-5 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-xl rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 animate-pulse-subtle"
+                  style={{ fontFamily: 'var(--font-family-display)' }}
+                >
+                  CHALLENGE THE HALL OF FAME
+                </button>
+                <button
+                  onClick={resetDraft}
+                  className="px-8 py-4 border-2 border-emerald-400/50 text-emerald-200 font-semibold rounded-xl hover:bg-emerald-700/50 transition-colors"
+                >
+                  Start New Draft
+                </button>
+              </div>
             </div>
 
             {/* Your Roster */}
@@ -914,22 +937,6 @@ export default function Draft() {
               ))}
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleChallengeHOF}
-                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-lg rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                style={{ fontFamily: 'var(--font-family-display)' }}
-              >
-                CHALLENGE THE HALL OF FAME
-              </button>
-              <button
-                onClick={resetDraft}
-                className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-colors"
-              >
-                Start New Draft
-              </button>
-            </div>
           </div>
         )}
 

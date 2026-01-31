@@ -2,17 +2,12 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllData } from '../api/airtable'
 import { getPlayerStats } from '../api/nbaStats'
-import Header from '../components/Header'
+import Navbar from '../components/Navbar'
 import RatingBackboards from '../components/RatingBackboards'
 import LineupReveal from '../components/LineupReveal'
 import GameSimulationModal from '../components/GameSimulationModal'
 import { generateTeamName } from '../utils/teamNameGenerator'
 import { simulateGame, formatTeamStats, calculateTeamStats } from '../utils/gameSimulator'
-
-const MODES = {
-  BOOK: 'book',
-  PLAYER: 'player',
-}
 
 function isGuard(position) {
   if (!position) return false
@@ -32,7 +27,6 @@ export default function BuildLineup() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [mode, setMode] = useState(MODES.BOOK)
   const [selections, setSelections] = useState([])
   const [enforcePositions, setEnforcePositions] = useState(false)
   const [lineup, setLineup] = useState(null)
@@ -68,11 +62,6 @@ export default function BuildLineup() {
     fetchData()
   }, [])
 
-  // Get books that have player comps
-  const booksWithComps = data?.books?.filter(book =>
-    book.characters?.some(char => char.player)
-  ) || []
-
   // Get unique players that have character comps
   const playersWithComps = []
   const seenPlayerIds = new Set()
@@ -89,8 +78,6 @@ export default function BuildLineup() {
     })
   })
 
-  const items = mode === MODES.BOOK ? booksWithComps : playersWithComps
-
   const handleSelect = (id) => {
     setValidationError(null)
     if (selections.includes(id)) {
@@ -101,11 +88,7 @@ export default function BuildLineup() {
   }
 
   const getSelectedItems = () => {
-    if (mode === MODES.BOOK) {
-      return selections.map(id => booksWithComps.find(b => b.id === id)).filter(Boolean)
-    } else {
-      return selections.map(id => playersWithComps.find(p => p.id === id)).filter(Boolean)
-    }
+    return selections.map(id => playersWithComps.find(p => p.id === id)).filter(Boolean)
   }
 
   const validatePositions = () => {
@@ -116,9 +99,7 @@ export default function BuildLineup() {
     let frontcourt = 0
 
     selectedItems.forEach(item => {
-      const position = mode === MODES.BOOK
-        ? item.characters?.[0]?.player?.position
-        : item.position
+      const position = item.position
 
       if (isGuard(position)) guards++
       if (isFrontcourt(position)) frontcourt++
@@ -140,23 +121,12 @@ export default function BuildLineup() {
 
     const selectedItems = getSelectedItems()
 
-    if (mode === MODES.BOOK) {
-      // Build lineup from books - show their player comps
-      const lineupData = selectedItems.map(book => ({
-        book,
-        character: book.characters?.[0],
-        player: book.characters?.[0]?.player,
-      }))
-      setLineup(lineupData)
-    } else {
-      // Build lineup from players - show their book/character matches
-      const lineupData = selectedItems.map(playerItem => ({
-        book: playerItem.book,
-        character: playerItem.character,
-        player: playerItem,
-      }))
-      setLineup(lineupData)
-    }
+    const lineupData = selectedItems.map(playerItem => ({
+      book: playerItem.book,
+      character: playerItem.character,
+      player: playerItem,
+    }))
+    setLineup(lineupData)
   }
 
   const handleStartOver = () => {
@@ -287,27 +257,15 @@ export default function BuildLineup() {
     handleStartOver()
   }
 
-  const handleModeSwitch = (newMode) => {
-    setMode(newMode)
-    setSelections([])
-    setLineup(null)
-    setValidationError(null)
-  }
-
   if (loading) {
     return (
-      <div className="min-h-screen">
-        <Header />
-        <main className="max-w-6xl mx-auto px-4 py-8">
+      <div className="min-h-screen hardwood-bg court-lines">
+        <Navbar />
+        <main className="relative z-10 max-w-6xl mx-auto px-4 py-8">
           {/* Page Title skeleton */}
           <div className="text-center mb-8 animate-pulse">
             <div className="h-10 bg-emerald-200 rounded w-80 mx-auto mb-3" />
             <div className="h-4 bg-emerald-200 rounded w-64 mx-auto" />
-          </div>
-
-          {/* Mode Toggle skeleton */}
-          <div className="flex justify-center mb-6">
-            <div className="h-12 bg-emerald-200 rounded-lg w-64 animate-pulse" />
           </div>
 
           {/* Position Toggle skeleton */}
@@ -361,53 +319,25 @@ export default function BuildLineup() {
   }
 
   return (
-    <div className="min-h-screen">
-      <Header />
+    <div className="min-h-screen hardwood-bg court-lines">
+      <Navbar />
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 py-8">
         {/* Page Title */}
         <div className="text-center mb-8">
           <h2
             className="text-3xl md:text-4xl font-bold text-emerald-800"
             style={{ fontFamily: 'var(--font-family-display)' }}
           >
-            BUILD YOUR STARTING 5
+            QUICK PICK 5
           </h2>
           <p className="text-stone-600 mt-2">
-            {mode === MODES.BOOK
-              ? 'Pick 5 books to reveal your fantasy basketball lineup'
-              : 'Pick 5 players to see which books match them'}
+            Pick 5 players to see which fantasy books match them
           </p>
         </div>
 
         {!lineup ? (
           <>
-            {/* Mode Toggle */}
-            <div className="flex justify-center mb-6">
-              <div className="inline-flex rounded-lg border-2 border-emerald-600 p-1 bg-white">
-                <button
-                  onClick={() => handleModeSwitch(MODES.BOOK)}
-                  className={`px-6 py-2 rounded-md font-medium transition-all ${
-                    mode === MODES.BOOK
-                      ? 'bg-emerald-700 text-white'
-                      : 'text-emerald-700 hover:bg-emerald-50'
-                  }`}
-                >
-                  Pick by Book
-                </button>
-                <button
-                  onClick={() => handleModeSwitch(MODES.PLAYER)}
-                  className={`px-6 py-2 rounded-md font-medium transition-all ${
-                    mode === MODES.PLAYER
-                      ? 'bg-emerald-700 text-white'
-                      : 'text-emerald-700 hover:bg-emerald-50'
-                  }`}
-                >
-                  Pick by Player
-                </button>
-              </div>
-            </div>
-
             {/* Position Rules Toggle */}
             <div className="flex justify-center mb-6">
               <label className="flex items-center gap-3 cursor-pointer">
@@ -472,137 +402,96 @@ export default function BuildLineup() {
 
             {/* Selection Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {items.map(item => {
-                const id = item.id
+              {playersWithComps.map(playerItem => {
+                const id = playerItem.id
                 const isSelected = selections.includes(id)
                 const isDisabled = !isSelected && selections.length >= 5
 
-                if (mode === MODES.BOOK) {
-                  const book = item
-                  const player = book.characters?.[0]?.player
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => handleSelect(id)}
-                      disabled={isDisabled}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        isSelected
-                          ? 'border-amber-500 bg-amber-50'
-                          : isDisabled
-                          ? 'border-stone-200 bg-stone-100 opacity-50 cursor-not-allowed'
-                          : 'border-emerald-200 bg-white hover:border-emerald-400 hover:bg-emerald-50'
-                      }`}
-                    >
-                      <div className="flex gap-3">
-                        {book.coverUrl ? (
-                          <img
-                            src={book.coverUrl}
-                            alt={book.title}
-                            className="w-16 h-24 object-cover rounded shadow-sm flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-16 h-24 bg-emerald-100 rounded flex-shrink-0" />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <div
-                            className={`font-semibold truncate ${isSelected ? 'text-amber-700' : 'text-emerald-800'}`}
-                            style={{ fontFamily: 'var(--font-family-display)' }}
-                          >
-                            {book.title}
-                          </div>
-                          <div className="text-sm text-stone-500 truncate">{book.author}</div>
-                          {player && (
-                            <div className="mt-2 text-xs text-emerald-700">
-                              {player.position && <span className="mr-2">{player.position}</span>}
-                              {isGuard(player.position) && (
-                                <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">G</span>
-                              )}
-                              {isFrontcourt(player.position) && (
-                                <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">F/C</span>
-                              )}
-                            </div>
+                return (
+                  <button
+                    key={id}
+                    onClick={() => handleSelect(id)}
+                    disabled={isDisabled}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      isSelected
+                        ? 'border-amber-500 bg-amber-50'
+                        : isDisabled
+                        ? 'border-stone-200 bg-stone-100 opacity-50 cursor-not-allowed'
+                        : 'border-emerald-200 bg-white hover:border-emerald-400 hover:bg-emerald-50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div
+                          className={`text-2xl font-bold ${isSelected ? 'text-amber-600' : 'text-amber-500'}`}
+                          style={{ fontFamily: 'var(--font-family-display)' }}
+                        >
+                          #{playerItem.number || '00'}
+                        </div>
+                        <div
+                          className={`font-semibold mt-1 ${isSelected ? 'text-amber-700' : 'text-emerald-800'}`}
+                          style={{ fontFamily: 'var(--font-family-display)' }}
+                        >
+                          {playerItem.name}
+                        </div>
+                        <div className="text-sm text-stone-500">{playerItem.currentTeam}</div>
+                        <div className="mt-2 text-xs">
+                          {playerItem.position && (
+                            <span className="text-stone-500 mr-2">{playerItem.position}</span>
+                          )}
+                          {isGuard(playerItem.position) && (
+                            <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">G</span>
+                          )}
+                          {isFrontcourt(playerItem.position) && (
+                            <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">F/C</span>
                           )}
                         </div>
-                        {isSelected && (
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                            </svg>
-                          </div>
-                        )}
                       </div>
-                    </button>
-                  )
-                } else {
-                  const playerItem = item
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => handleSelect(id)}
-                      disabled={isDisabled}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        isSelected
-                          ? 'border-amber-500 bg-amber-50'
-                          : isDisabled
-                          ? 'border-stone-200 bg-stone-100 opacity-50 cursor-not-allowed'
-                          : 'border-emerald-200 bg-white hover:border-emerald-400 hover:bg-emerald-50'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <div
-                            className={`text-2xl font-bold ${isSelected ? 'text-amber-600' : 'text-amber-500'}`}
-                            style={{ fontFamily: 'var(--font-family-display)' }}
-                          >
-                            #{playerItem.number || '00'}
-                          </div>
-                          <div
-                            className={`font-semibold mt-1 ${isSelected ? 'text-amber-700' : 'text-emerald-800'}`}
-                            style={{ fontFamily: 'var(--font-family-display)' }}
-                          >
-                            {playerItem.name}
-                          </div>
-                          <div className="text-sm text-stone-500">{playerItem.currentTeam}</div>
-                          <div className="mt-2 text-xs">
-                            {playerItem.position && (
-                              <span className="text-stone-500 mr-2">{playerItem.position}</span>
-                            )}
-                            {isGuard(playerItem.position) && (
-                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">G</span>
-                            )}
-                            {isFrontcourt(playerItem.position) && (
-                              <span className="px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">F/C</span>
-                            )}
-                          </div>
+                      {isSelected && (
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
                         </div>
-                        {isSelected && (
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
-                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    </button>
-                  )
-                }
+                      )}
+                    </div>
+                  </button>
+                )
               })}
             </div>
           </>
         ) : (
           /* Enhanced Lineup Results with Reveal */
           <div>
-            {/* Team Name */}
-            <div className="text-center mb-6">
-              <div className="text-sm text-emerald-600 uppercase tracking-widest mb-2">
+            {/* Team Name + Action Buttons */}
+            <div className="bg-gradient-to-r from-emerald-700 to-emerald-800 rounded-2xl p-8 mb-8 text-center text-white">
+              <div className="text-emerald-300 text-sm uppercase tracking-widest mb-2">
                 Introducing
               </div>
               <h3
-                className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent"
+                className="text-3xl md:text-4xl font-bold text-amber-400 mb-6"
                 style={{ fontFamily: 'var(--font-family-display)' }}
               >
                 {teamName || 'YOUR STARTING 5'}
               </h3>
+              {revealComplete && (
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={handleChallengeHOF}
+                    disabled={statsLoading}
+                    className="px-10 py-5 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-xl rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none animate-pulse-subtle"
+                    style={{ fontFamily: 'var(--font-family-display)' }}
+                  >
+                    CHALLENGE THE HALL OF FAME
+                  </button>
+                  <button
+                    onClick={handleStartOver}
+                    className="px-8 py-4 border-2 border-emerald-400/50 text-emerald-200 font-semibold rounded-xl hover:bg-emerald-700/50 transition-colors"
+                  >
+                    Build Another Lineup
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Lineup Reveal Animation */}
@@ -696,6 +585,14 @@ export default function BuildLineup() {
                               <span className="mx-1">•</span>
                               {item.book?.author}
                             </div>
+                            {item.book?.series && (
+                              <Link
+                                to={`/series/${item.book.seriesId}`}
+                                className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded font-semibold hover:bg-amber-200 transition-colors"
+                              >
+                                {item.book.series.name} #{item.book.seriesPosition}
+                              </Link>
+                            )}
                             {item.player?.position && (
                               <span className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded font-semibold">
                                 {item.player.position}
@@ -713,26 +610,6 @@ export default function BuildLineup() {
                   ))}
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  {/* Challenge Button */}
-                  <button
-                    onClick={handleChallengeHOF}
-                    disabled={statsLoading}
-                    className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-lg rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    style={{ fontFamily: 'var(--font-family-display)' }}
-                  >
-                    CHALLENGE THE HALL OF FAME
-                  </button>
-
-                  {/* Build Another Button */}
-                  <button
-                    onClick={handleStartOver}
-                    className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-colors"
-                  >
-                    Build Another Lineup
-                  </button>
-                </div>
               </>
             )}
           </div>
@@ -751,7 +628,7 @@ export default function BuildLineup() {
       </main>
 
       <footer className="border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
-        <p>Where fantasy meets the hardwood</p>
+        <p>A personal project by a fantasy reader who watches too much basketball</p>
       </footer>
     </div>
   )
