@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import SurpriseModal from './SurpriseModal'
 
@@ -6,27 +6,8 @@ export default function Navbar() {
   const location = useLocation()
   const [showSurpriseModal, setShowSurpriseModal] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
 
   const isActive = (path) => location.pathname === path
-
-  const isScoutReportsActive = () =>
-    location.pathname === '/scout-reports' ||
-    location.pathname === '/hall-of-fame' ||
-    location.pathname.startsWith('/book/') ||
-    location.pathname.startsWith('/series/')
-
-  // Close dropdown on click outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
 
   const handleSurpriseClick = () => {
     setShowSurpriseModal(true)
@@ -75,64 +56,26 @@ export default function Navbar() {
                 Quick Pick
               </Link>
 
-              {/* Scout Reports Dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 flex items-center gap-1 ${
-                    isScoutReportsActive()
-                      ? 'bg-emerald-700 text-white'
-                      : 'text-emerald-700 hover:bg-emerald-50'
-                  }`}
-                >
-                  Scout Reports
-                  <svg
-                    className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-48 bg-white border-2 border-emerald-200 rounded-lg shadow-lg overflow-hidden z-50">
-                    <Link
-                      to="/scout-reports"
-                      onClick={() => setDropdownOpen(false)}
-                      className={`block px-4 py-3 text-sm font-medium transition-colors ${
-                        isActive('/scout-reports')
-                          ? 'bg-emerald-700 text-white'
-                          : 'text-emerald-700 hover:bg-emerald-50'
-                      }`}
-                    >
-                      All Books
-                    </Link>
-                    <Link
-                      to="/hall-of-fame"
-                      onClick={() => setDropdownOpen(false)}
-                      className={`block px-4 py-3 text-sm font-medium transition-colors border-t border-emerald-100 ${
-                        isActive('/hall-of-fame')
-                          ? 'bg-emerald-700 text-white'
-                          : 'text-emerald-700 hover:bg-emerald-50'
-                      }`}
-                    >
-                      Hall of Fame
-                    </Link>
-                  </div>
-                )}
-              </div>
-
               <Link
-                to="/about"
+                to="/scout-reports"
                 className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 ${
-                  isActive('/about')
+                  isActive('/scout-reports') || location.pathname.startsWith('/book/') || location.pathname.startsWith('/series/')
                     ? 'bg-emerald-700 text-white'
                     : 'text-emerald-700 hover:bg-emerald-50'
                 }`}
               >
-                How It Works
+                All Books
+              </Link>
+
+              <Link
+                to="/hall-of-fame"
+                className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 ${
+                  isActive('/hall-of-fame')
+                    ? 'bg-emerald-700 text-white'
+                    : 'text-emerald-700 hover:bg-emerald-50'
+                }`}
+              >
+                Hall of Fame
               </Link>
 
               <button
@@ -175,9 +118,7 @@ export default function Navbar() {
               to="/draft"
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
-                isActive('/draft')
-                  ? 'bg-emerald-700 text-white'
-                  : 'text-emerald-700 hover:bg-emerald-50'
+                isActive('/draft') ? 'bg-emerald-700 text-white' : 'text-emerald-700 hover:bg-emerald-50'
               }`}
             >
               Draft
@@ -186,25 +127,16 @@ export default function Navbar() {
               to="/quick-pick"
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
-                isActive('/quick-pick')
-                  ? 'bg-emerald-700 text-white'
-                  : 'text-emerald-700 hover:bg-emerald-50'
+                isActive('/quick-pick') ? 'bg-emerald-700 text-white' : 'text-emerald-700 hover:bg-emerald-50'
               }`}
             >
               Quick Pick
             </Link>
-
-            {/* Scout Reports group header */}
-            <div className="px-4 pt-3 pb-1 text-xs font-bold text-stone-400 uppercase tracking-wider">
-              Scout Reports
-            </div>
             <Link
               to="/scout-reports"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-3 pl-8 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
-                isActive('/scout-reports')
-                  ? 'bg-emerald-700 text-white'
-                  : 'text-emerald-700 hover:bg-emerald-50'
+              className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
+                isActive('/scout-reports') ? 'bg-emerald-700 text-white' : 'text-emerald-700 hover:bg-emerald-50'
               }`}
             >
               All Books
@@ -212,27 +144,12 @@ export default function Navbar() {
             <Link
               to="/hall-of-fame"
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-3 pl-8 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
-                isActive('/hall-of-fame')
-                  ? 'bg-emerald-700 text-white'
-                  : 'text-emerald-700 hover:bg-emerald-50'
+              className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
+                isActive('/hall-of-fame') ? 'bg-emerald-700 text-white' : 'text-emerald-700 hover:bg-emerald-50'
               }`}
             >
               Hall of Fame
             </Link>
-
-            <Link
-              to="/about"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
-                isActive('/about')
-                  ? 'bg-emerald-700 text-white'
-                  : 'text-emerald-700 hover:bg-emerald-50'
-              }`}
-            >
-              How It Works
-            </Link>
-
             <button
               onClick={handleSurpriseClick}
               className="w-full mt-2 px-4 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 transition-colors text-center focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-inset"

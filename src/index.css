@@ -198,6 +198,18 @@ html {
   }
 }
 
+/* Hotspot pulsing ring — slower than Tailwind's animate-ping */
+@keyframes scene-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-scene-ping {
+  animation: scene-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
 /* Reduced motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

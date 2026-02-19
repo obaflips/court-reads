@@ -23,80 +23,6 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Three-step guide */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Step 1 */}
-          <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg">
-            <div className="bg-gradient-to-r from-emerald-700 to-emerald-800 px-4 py-2 flex justify-between items-center">
-              <span className="text-white font-bold tracking-wider text-sm">STEP 1</span>
-              <span className="text-amber-400 font-bold text-sm">DRAFT</span>
-            </div>
-            <div className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-emerald-50 border-2 border-emerald-200 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <h3
-                className="text-xl font-bold text-emerald-800 mb-2"
-                style={{ fontFamily: 'var(--font-family-impact)' }}
-              >
-                DRAFT YOUR TEAM
-              </h3>
-              <p className="text-stone-600 text-sm">
-                Pick epic fantasy characters in a draft against AI opponents, or use Quick Pick to grab your starting 5.
-              </p>
-            </div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg">
-            <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 flex justify-between items-center">
-              <span className="text-white font-bold tracking-wider text-sm">STEP 2</span>
-              <span className="text-emerald-900 font-bold text-sm">MATCH</span>
-            </div>
-            <div className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-amber-50 border-2 border-amber-200 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <h3
-                className="text-xl font-bold text-emerald-800 mb-2"
-                style={{ fontFamily: 'var(--font-family-impact)' }}
-              >
-                GET YOUR READS
-              </h3>
-              <p className="text-stone-600 text-sm">
-                Every character on my reading list is matched to an NBA player. Your picks reveal your personalized reading list.
-              </p>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg">
-            <div className="bg-gradient-to-r from-emerald-700 to-amber-500 px-4 py-2 flex justify-between items-center">
-              <span className="text-white font-bold tracking-wider text-sm">STEP 3</span>
-              <span className="text-white font-bold text-sm">COMPETE</span>
-            </div>
-            <div className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-emerald-50 border-2 border-emerald-200 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              </div>
-              <h3
-                className="text-xl font-bold text-emerald-800 mb-2"
-                style={{ fontFamily: 'var(--font-family-impact)' }}
-              >
-                CHALLENGE THE HALL
-              </h3>
-              <p className="text-stone-600 text-sm">
-                Simulate a game with your drafted team against the Hall of Fame — my top-rated reads since I started this project.
-              </p>
-            </div>
-          </div>
-        </div>
 
         {/* What is Court Reads? */}
         <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg mb-12">
@@ -110,11 +36,8 @@ export default function Home() {
             >
               WHAT IS COURT READS?
             </h2>
-            <p className="text-stone-600 leading-relaxed mb-4">
-              Court Reads started as a way to track my reading list — I'm a fantasy reader and an NBA fan, and I kept noticing how book characters reminded me of real players. So I built a site around it.
-            </p>
             <p className="text-stone-600 leading-relaxed">
-              Every book I've read gets matched to NBA players based on the characters. The draft and challenge features are just a fun way to explore those comparisons and maybe find your next read.
+              This started as a reading tracker. It escalated. Now I assign NBA comps to fantasy books based on vibes. Created by a lifelong Sonics fan with nothing to do on game nights.
             </p>
           </div>
         </div>

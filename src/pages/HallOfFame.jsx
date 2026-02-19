@@ -119,6 +119,11 @@ function HallOfFameCard({ book, rank }) {
                 {mainCharacter.tagline && (
                   <p className="text-amber-200/80 text-xs mt-1 italic line-clamp-2">"{mainCharacter.tagline}"</p>
                 )}
+                {mainCharacter?.description && (
+                  <p className="text-amber-200/60 text-xs mt-2 line-clamp-2">
+                    {mainCharacter.description}
+                  </p>
+                )}
               </div>
             )}
 
@@ -259,10 +264,6 @@ export default function HallOfFame() {
           </div>
         )}
       </main>
-
-      <footer className="border-t border-amber-500/20 py-8 text-center text-gray-500 text-sm mt-12">
-        <p>A personal project by a fantasy reader who watches too much basketball</p>
-      </footer>
     </div>
   )
 }

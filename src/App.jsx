@@ -6,7 +6,6 @@ import HallOfFame from './pages/HallOfFame'
 import SeriesDetail from './pages/SeriesDetail'
 import Draft from './pages/Draft'
 import ScoutReports from './pages/ScoutReports'
-import About from './pages/About'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -17,7 +16,7 @@ function App() {
       <Route path="/quick-pick" element={<BuildLineup />} />
       <Route path="/build-lineup" element={<Navigate to="/quick-pick" replace />} />
       <Route path="/scout-reports" element={<ScoutReports />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/about" element={<Navigate to="/" replace />} />
       <Route path="/book/:id" element={<BookDetail />} />
       <Route path="/hall-of-fame" element={<HallOfFame />} />
       <Route path="/series/:seriesId" element={<SeriesDetail />} />

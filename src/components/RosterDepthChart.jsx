@@ -193,7 +193,9 @@ export default function RosterDepthChart({ books, searchQuery, setSearchQuery })
 
       {books.length === 0 && (
         <div className="p-8 text-center text-stone-500">
-          No books found matching your search.
+          {searchQuery?.trim()
+            ? 'No matches. Try searching by player name — the comps are the point.'
+            : "Nothing there — my list isn't that long yet."}
         </div>
       )}
     </div>

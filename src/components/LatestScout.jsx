@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getPlayerStats } from '../api/nbaStats'
-import { ActivityIcon, TrendingUpIcon } from './ScoutingHeader'
+import { ActivityIcon } from './ScoutingHeader'
 
 export default function LatestScout({ book }) {
   const [playerStats, setPlayerStats] = useState(null)
@@ -142,12 +142,11 @@ export default function LatestScout({ book }) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-center gap-2 mt-4 text-emerald-700 text-sm font-semibold">
-                <TrendingUpIcon className="w-4 h-4" />
-                <span>IMPACT PLAYER</span>
-                <span className="text-emerald-500">•</span>
-                <span>HIGH EFFICIENCY</span>
-              </div>
+              {mainCharacter?.description && (
+                <p className="text-stone-600 text-xs mt-4 line-clamp-3 leading-relaxed">
+                  {mainCharacter.description.slice(0, 100)}{mainCharacter.description.length > 100 ? '…' : ''}
+                </p>
+              )}
             </div>
           </div>
         </div>

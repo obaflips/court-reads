@@ -160,10 +160,6 @@ export default function ScoutReports() {
           setSearchQuery={setSearchQuery}
         />
       </main>
-
-      <footer className="relative z-10 border-t border-emerald-200 py-8 text-center text-stone-500 text-sm">
-        <p>A personal project by a fantasy reader who watches too much basketball</p>
-      </footer>
     </div>
   )
 }

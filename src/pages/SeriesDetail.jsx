@@ -558,10 +558,6 @@ export default function SeriesDetail() {
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
-        <p>A personal project by a fantasy reader who watches too much basketball</p>
-      </footer>
     </div>
   )
 }

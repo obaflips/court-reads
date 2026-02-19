@@ -13,11 +13,31 @@ export default function About() {
             className="text-4xl md:text-5xl lg:text-6xl font-black text-emerald-800 tracking-tight"
             style={{ fontFamily: 'var(--font-family-impact)' }}
           >
-            HOW IT WORKS
+            ABOUT
           </h1>
-          <p className="text-emerald-700 font-bold tracking-wide mt-3 text-lg">
-            THE FULL BREAKDOWN
-          </p>
+        </div>
+
+        {/* Origin Story */}
+        <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg mb-8">
+          <div className="bg-gradient-to-r from-emerald-700 to-amber-500 px-6 py-2 flex justify-between items-center">
+            <span className="text-white font-bold tracking-wider text-sm">ABOUT THIS SITE</span>
+            <span className="text-white font-bold text-sm">THE ORIGIN STORY</span>
+          </div>
+          <div className="p-6 md:p-8">
+            <p className="text-stone-600 leading-relaxed mb-4">
+              [YOUR NAME] has been reading epic fantasy since [YEAR] and watching too much NBA since [YEAR].
+              The Sonics colors are not an accident.
+            </p>
+            <p className="text-stone-600 leading-relaxed mb-4">
+              This site started when [ORIGIN COMP — e.g., "I realized Kelsier from The Final Empire is Kevin
+              Durant on a team he doesn't fully trust"] and I needed somewhere to put that observation.
+              Every book I finish gets a comp. Some of them are obvious. Some of them I'll defend forever.
+            </p>
+            <p className="text-stone-600 leading-relaxed">
+              I read mostly [SUBGENRE — e.g., secondary world epic and grimdark]. My ratings are honest.
+              The Hall of Fame is the Hall of Fame.
+            </p>
+          </div>
         </div>
 
         {/* Detailed Guide */}
@@ -109,7 +129,7 @@ export default function About() {
       </main>
 
       <footer className="relative z-10 border-t border-emerald-200 py-8 text-center text-stone-500 text-sm mt-12">
-        <p>A personal project by a fantasy reader who watches too much basketball</p>
+        <p>[YOUR NAME] · built in [CITY] · reading [CURRENT BOOK] · rooting for [YOUR TEAM]</p>
       </footer>
     </div>
   )
