@@ -42,11 +42,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+        {/* CTA */}
+        <div className="max-w-md mx-auto mb-12">
           <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg">
             <div className="bg-gradient-to-r from-emerald-700 to-emerald-800 px-4 py-2">
-              <span className="text-amber-400 font-bold tracking-wider text-sm">FULL EXPERIENCE</span>
+              <span className="text-amber-400 font-bold tracking-wider text-sm">FANTASY DRAFT</span>
             </div>
             <div className="p-6">
               <Link
@@ -57,25 +57,7 @@ export default function Home() {
                 START YOUR DRAFT
               </Link>
               <p className="text-stone-500 text-sm mt-3">
-                Snake draft with AI opponents. 5 rounds, real stakes (sort of).
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white border-4 border-emerald-700 rounded-xl overflow-hidden shadow-lg">
-            <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2">
-              <span className="text-white font-bold tracking-wider text-sm">QUICK START</span>
-            </div>
-            <div className="p-6">
-              <Link
-                to="/quick-pick"
-                className="block px-6 py-4 border-3 border-emerald-700 text-emerald-700 font-bold text-xl rounded-xl hover:bg-emerald-50 transition-all text-center"
-                style={{ fontFamily: 'var(--font-family-impact)' }}
-              >
-                QUICK PICK 5
-              </Link>
-              <p className="text-stone-500 text-sm mt-3">
-                Just pick 5 players and see what books come back. No pressure.
+                Draft 5 books against AI rivals. Your characters are revealed as you pick. Challenge the Hall of Fame when your squad is set.
               </p>
             </div>
           </div>

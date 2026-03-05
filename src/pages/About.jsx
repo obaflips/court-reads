@@ -56,10 +56,10 @@ export default function About() {
                 DRAFT YOUR TEAM
               </h3>
               <p className="text-stone-600 leading-relaxed mb-3">
-                You've got two ways in. The <strong>Full Draft</strong> is a snake draft against AI opponents — you take turns picking from the available pool of NBA players, and the AI teams will try to snag the best ones before you can. It's 5 rounds, and order matters.
+                The Draft is a snake draft against AI opponents — you take turns picking from the available pool of books, and the AI teams will try to snag the best ones before you can. It's 5 rounds, and order matters.
               </p>
               <p className="text-stone-600 leading-relaxed">
-                If you just want to browse, <strong>Quick Pick</strong> lets you grab any 5 players without the competitive element. Either way, you end up with a starting 5.
+                Each book you pick reveals a character — that's your player. The draft is blind: you see the books, but the characters are only revealed one by one as picks come in.
               </p>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function About() {
                 GET YOUR READS
               </h3>
               <p className="text-stone-600 leading-relaxed mb-3">
-                Here's the thing — every NBA player in the pool is actually matched to a character from a fantasy book I've read. When you draft a player, you're really drafting their book counterpart.
+                Here's the thing — every book in the draft pool has a character matched to an NBA player. When you draft a book, its character is revealed — that's your player comp.
               </p>
               <p className="text-stone-600 leading-relaxed">
                 The comparisons are based on how the character plays their role in the story: their style, their personality, their arc. A cerebral point guard might match a strategic wizard. A dominant center might match an immovable warrior-king. You get the idea.
@@ -110,20 +110,13 @@ export default function About() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <Link
             to="/draft"
             className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold text-lg rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-center"
             style={{ fontFamily: 'var(--font-family-impact)' }}
           >
             START YOUR DRAFT
-          </Link>
-          <Link
-            to="/quick-pick"
-            className="px-8 py-4 border-3 border-emerald-700 text-emerald-700 font-bold text-lg rounded-xl hover:bg-emerald-50 transition-all text-center"
-            style={{ fontFamily: 'var(--font-family-impact)' }}
-          >
-            QUICK PICK 5
           </Link>
         </div>
       </main>

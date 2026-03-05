@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import BookDetail from './pages/BookDetail'
-import BuildLineup from './pages/BuildLineup'
 import HallOfFame from './pages/HallOfFame'
 import SeriesDetail from './pages/SeriesDetail'
 import Draft from './pages/Draft'
@@ -13,8 +12,6 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/draft" element={<Draft />} />
-      <Route path="/quick-pick" element={<BuildLineup />} />
-      <Route path="/build-lineup" element={<Navigate to="/quick-pick" replace />} />
       <Route path="/scout-reports" element={<ScoutReports />} />
       <Route path="/about" element={<Navigate to="/" replace />} />
       <Route path="/book/:id" element={<BookDetail />} />

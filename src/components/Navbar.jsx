@@ -46,17 +46,6 @@ export default function Navbar() {
               </Link>
 
               <Link
-                to="/quick-pick"
-                className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 ${
-                  isActive('/quick-pick')
-                    ? 'bg-emerald-700 text-white'
-                    : 'text-emerald-700 hover:bg-emerald-50'
-                }`}
-              >
-                Quick Pick
-              </Link>
-
-              <Link
                 to="/scout-reports"
                 className={`px-4 py-2 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 ${
                   isActive('/scout-reports') || location.pathname.startsWith('/book/') || location.pathname.startsWith('/series/')
@@ -123,16 +112,7 @@ export default function Navbar() {
             >
               Draft
             </Link>
-            <Link
-              to="/quick-pick"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${
-                isActive('/quick-pick') ? 'bg-emerald-700 text-white' : 'text-emerald-700 hover:bg-emerald-50'
-              }`}
-            >
-              Quick Pick
-            </Link>
-            <Link
+<Link
               to="/scout-reports"
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-4 py-3 rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-inset ${

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllData } from '../api/airtable'
 import { getPlayerStats } from '../api/nbaStats'
@@ -44,6 +44,134 @@ function getPositionColor(position) {
   return 'bg-stone-100 text-stone-700'
 }
 
+function PoolCard({ char, canPick, onPick }) {
+  return (
+    <button
+      onClick={() => canPick && onPick(char)}
+      disabled={!canPick}
+      className={`p-3 rounded-xl border-2 text-left transition-all w-full ${
+        canPick
+          ? 'border-emerald-300 bg-white hover:border-amber-400 hover:bg-amber-50 cursor-pointer'
+          : 'border-stone-200 bg-stone-50 opacity-50 cursor-not-allowed'
+      }`}
+    >
+      <div className="flex items-start gap-3">
+        {/* Book Cover */}
+        {char.bookCoverUrl ? (
+          <img
+            src={char.bookCoverUrl}
+            alt={char.bookTitle}
+            className="w-14 h-20 object-cover rounded shadow-sm flex-shrink-0"
+          />
+        ) : (
+          <div className="w-14 h-20 bg-emerald-100 rounded flex-shrink-0 flex items-center justify-center">
+            <span className="text-emerald-400 text-xs text-center px-1">No Cover</span>
+          </div>
+        )}
+
+        <div className="flex-1 min-w-0">
+          <div
+            className="font-bold text-emerald-800 line-clamp-2 text-sm leading-tight"
+            style={{ fontFamily: 'var(--font-family-display)' }}
+          >
+            {char.bookTitle}
+          </div>
+          {char.bookAuthor && (
+            <div className="text-xs text-stone-500 truncate mt-0.5">
+              by {char.bookAuthor}
+            </div>
+          )}
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            {char.seriesName && (
+              <span className="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded font-medium truncate max-w-[120px]">
+                {char.seriesName}
+              </span>
+            )}
+            <div className="ml-auto flex-shrink-0">
+              <RatingBackboards rating={char.bookRating} size="sm" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </button>
+  )
+}
+
+function LastPickCard({ lastPick }) {
+  const [revealed, setRevealed] = useState(false)
+  useEffect(() => {
+    if (!lastPick) return
+    setRevealed(false)
+    const t = setTimeout(() => setRevealed(true), 800)
+    return () => clearTimeout(t)
+  }, [lastPick])
+
+  if (!lastPick) return null
+  const char = lastPick.character
+
+  return (
+    <div className="bg-white rounded-xl border border-emerald-200 p-3">
+      <div className="text-xs uppercase tracking-wider text-stone-400 mb-2">Last Pick</div>
+      <div className="flex items-center gap-1.5 mb-2">
+        <span className="text-sm">{lastPick.team?.emoji}</span>
+        <span className="text-xs text-stone-500 truncate">{lastPick.team?.name}</span>
+      </div>
+      <div className="card-flip-container" style={{ height: '160px' }}>
+        <div className={`card-flip-inner${revealed ? ' flipped' : ''}`}>
+          {/* Front: book cover */}
+          <div className="card-face rounded-lg overflow-hidden bg-emerald-900">
+            {char?.bookCoverUrl ? (
+              <img src={char.bookCoverUrl} alt="" className="absolute inset-0 w-full h-full object-contain" />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center p-3">
+                <p className="text-white text-xs text-center">{char?.bookTitle}</p>
+              </div>
+            )}
+          </div>
+          {/* Back: character scouting report */}
+          <div
+            className="card-face card-face-back rounded-lg p-2 flex flex-col justify-between"
+            style={{ background: '#0a1612', border: '1px solid #FFC200' }}
+          >
+            {char?.name ? (
+              <>
+                <div>
+                  <div className="text-amber-400 font-bold text-sm leading-tight">{char.name}</div>
+                  {char.player?.name && (
+                    <div className="text-emerald-400 text-xs mt-0.5">playing like {char.player.name}</div>
+                  )}
+                  {char.tagline && (
+                    <div className="text-stone-500 text-xs italic mt-1 line-clamp-2">"{char.tagline}"</div>
+                  )}
+                </div>
+                <div className="flex items-center justify-between mt-1">
+                  <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${getPositionColor(char.player?.position)}`}>
+                    {getPositionLabel(char.player?.position)}
+                  </span>
+                  {char.player?.stats && (
+                    <div className="flex gap-2 text-center">
+                      {[['PPG', char.player.stats.ppg], ['RPG', char.player.stats.rpg]].map(([label, val]) => (
+                        <div key={label}>
+                          <div className="text-amber-400 text-xs font-bold">{typeof val === 'number' ? val.toFixed(1) : '—'}</div>
+                          <div className="text-stone-600 text-xs">{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-stone-500 text-xs">No Scouting Data</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Draft() {
   // Data state
   const [data, setData] = useState(null)
@@ -70,7 +198,6 @@ export default function Draft() {
   const [lastPick, setLastPick] = useState(null)
 
   // UI state
-  const [filterPosition, setFilterPosition] = useState('ALL')
   const [filterSeries, setFilterSeries] = useState('ALL')
   const [searchQuery, setSearchQuery] = useState('')
   const [autoPick, setAutoPick] = useState(false)
@@ -92,16 +219,20 @@ export default function Draft() {
         const result = await getAllData()
         setData(result)
 
-        // Build character pool with enriched data
+        // Build book pool with enriched data (one entry per book)
         const characterPool = []
+        const seenBookIds = new Set()
         for (const book of result.books) {
           for (const character of book.characters || []) {
-            if (character.player) {
+            if (character.player && !seenBookIds.has(book.id)) {
+              seenBookIds.add(book.id)
               // Fetch stats for the player
               const stats = await getPlayerStats(character.player.name)
               characterPool.push({
                 ...character,
                 bookTitle: book.title,
+                bookAuthor: book.author,
+                bookCoverUrl: book.coverUrl,
                 bookRating: book.rating,
                 seriesName: book.series?.name,
                 player: {
@@ -128,22 +259,41 @@ export default function Draft() {
 
   // Filter available characters
   const filteredCharacters = availableCharacters.filter(char => {
-    if (filterPosition !== 'ALL' && getPositionLabel(char.player?.position) !== filterPosition) {
-      return false
-    }
     if (filterSeries !== 'ALL' && char.seriesName !== filterSeries) {
       return false
     }
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       return (
-        char.name?.toLowerCase().includes(query) ||
         char.bookTitle?.toLowerCase().includes(query) ||
-        char.player?.name?.toLowerCase().includes(query)
+        char.bookAuthor?.toLowerCase().includes(query) ||
+        char.seriesName?.toLowerCase().includes(query)
       )
     }
     return true
   })
+
+  // Group available characters by series (when no filter active)
+  const groupedPool = useMemo(() => {
+    if (searchQuery || filterSeries !== 'ALL') return null
+    const seriesMap = new Map()
+    const standalone = []
+    for (const char of availableCharacters) {
+      if (char.seriesName) {
+        if (!seriesMap.has(char.seriesName)) seriesMap.set(char.seriesName, [])
+        seriesMap.get(char.seriesName).push(char)
+      } else {
+        standalone.push(char)
+      }
+    }
+    const seriesSections = [...seriesMap.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, chars]) => ({ name, chars }))
+    const sections = standalone.length
+      ? [{ name: 'Standalone Reads', chars: standalone }, ...seriesSections]
+      : seriesSections
+    return sections
+  }, [availableCharacters, searchQuery, filterSeries])
 
   // Get teams (user + AIs)
   const teams = [
@@ -384,15 +534,19 @@ export default function Draft() {
     setHofLineup(null)
     setTeamName('')
     processingPickIndex.current = -1
-    // Reload characters
+    // Reload books pool (one per book)
     if (data) {
       const characterPool = []
+      const seenBookIds = new Set()
       for (const book of data.books) {
         for (const character of book.characters || []) {
-          if (character.player) {
+          if (character.player && !seenBookIds.has(book.id)) {
+            seenBookIds.add(book.id)
             characterPool.push({
               ...character,
               bookTitle: book.title,
+              bookAuthor: book.author,
+              bookCoverUrl: book.coverUrl,
               bookRating: book.rating,
               seriesName: book.series?.name,
               player: character.player,
@@ -465,7 +619,7 @@ export default function Draft() {
             FANTASY DRAFT
           </h2>
           <p className="text-stone-600 mt-2">
-            {phase === PHASES.SETUP && 'Draft 5 characters against AI opponents'}
+            {phase === PHASES.SETUP && 'Draft 5 books and reveal your squad'}
             {phase === PHASES.DRAFTING && `Round ${currentPick?.round || 1} • Pick ${currentPick?.pick || 1}`}
             {phase === PHASES.COMPLETE && 'Draft complete! Review your roster'}
           </p>
@@ -549,7 +703,7 @@ export default function Draft() {
             {/* Character Pool Info */}
             <div className="bg-emerald-50 rounded-xl p-4 mb-6 text-center">
               <span className="text-emerald-700">
-                <strong>{availableCharacters.length}</strong> characters available in draft pool
+                <strong>{availableCharacters.length}</strong> books in the draft pool
               </span>
             </div>
 
@@ -607,24 +761,7 @@ export default function Draft() {
               </div>
 
               {/* Last Pick */}
-              {lastPick && (
-                <div className="bg-white rounded-xl border border-emerald-200 p-3">
-                  <div className="text-xs uppercase tracking-wider text-stone-400 mb-1">
-                    Last Pick
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span>{lastPick.team?.emoji}</span>
-                    <div>
-                      <div className="font-semibold text-emerald-800 text-sm">
-                        {lastPick.character?.name}
-                      </div>
-                      <div className="text-xs text-stone-500">
-                        {lastPick.character?.player?.name}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <LastPickCard lastPick={lastPick} />
 
               {/* Auto-Pick Toggle */}
               <div className="bg-white rounded-xl border border-stone-200 p-3">
@@ -655,18 +792,22 @@ export default function Draft() {
                 </div>
                 <div className="space-y-2">
                   {(rosters[userDraftPosition] || []).map((char, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm">
-                      <span className={`px-1.5 py-0.5 rounded text-xs font-medium flex-shrink-0 ${getPositionColor(char.player?.position)}`}>
-                        {getPositionLabel(char.player?.position)}
-                      </span>
+                    <div key={i} className="flex items-center gap-2">
+                      {char.bookCoverUrl ? (
+                        <img
+                          src={char.bookCoverUrl}
+                          alt=""
+                          className="w-8 h-11 object-cover rounded flex-shrink-0 shadow-sm"
+                        />
+                      ) : (
+                        <div className="w-8 h-11 bg-emerald-100 rounded flex-shrink-0" />
+                      )}
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-stone-800 truncate">{char.name}</div>
-                        <div className="text-xs text-stone-500 truncate">
-                          {char.player?.name}
-                          {char.player?.stats?.per && (
-                            <span className="text-amber-600 ml-1 font-mono">{char.player.stats.per.toFixed(1)} PER</span>
-                          )}
-                        </div>
+                        <div className="font-medium text-emerald-800 text-sm line-clamp-2 leading-tight">{char.bookTitle}</div>
+                        <div className="text-xs text-amber-600 truncate mt-0.5">{char.name}</div>
+                        {char.player?.name && (
+                          <div className="text-xs text-stone-400 truncate">playing like {char.player.name}</div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -710,26 +851,12 @@ export default function Draft() {
                   <div className="flex-1 min-w-[200px]">
                     <input
                       type="text"
-                      placeholder="Search characters, books, players..."
+                      placeholder="Search books, authors, series..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     />
                   </div>
-
-                  {/* Position Filter */}
-                  <select
-                    value={filterPosition}
-                    onChange={(e) => setFilterPosition(e.target.value)}
-                    className="px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="ALL">All Positions</option>
-                    <option value="PG">Point Guard</option>
-                    <option value="SG">Shooting Guard</option>
-                    <option value="SF">Small Forward</option>
-                    <option value="PF">Power Forward</option>
-                    <option value="C">Center</option>
-                  </select>
 
                   {/* Series Filter */}
                   <select
@@ -745,64 +872,46 @@ export default function Draft() {
                 </div>
               </div>
 
-              {/* Character Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                {filteredCharacters.map(char => {
-                  const canPick = isUserPick && !isAIPicking && isValidPick(char, rosters[userDraftPosition] || [], numRounds)
-                  return (
-                    <button
-                      key={char.id}
-                      onClick={() => canPick && handleUserPick(char)}
-                      disabled={!canPick}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        canPick
-                          ? 'border-emerald-300 bg-white hover:border-amber-400 hover:bg-amber-50 cursor-pointer'
-                          : 'border-stone-200 bg-stone-50 opacity-60 cursor-not-allowed'
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        {/* Jersey Number */}
-                        <div
-                          className="text-2xl font-bold text-amber-500 w-10 flex-shrink-0"
+              {/* Character Grid — grouped by series or flat when filtering */}
+              {groupedPool ? (
+                <div>
+                  {groupedPool.map(section => (
+                    <div key={section.name}>
+                      <div className="flex items-center gap-3 mb-3 mt-6 first:mt-0">
+                        <div className="h-px flex-1 bg-emerald-200" />
+                        <h3
+                          className="text-xs uppercase tracking-[0.2em] font-bold text-emerald-700 whitespace-nowrap"
                           style={{ fontFamily: 'var(--font-family-display)' }}
                         >
-                          #{char.player?.number || '00'}
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          {/* Character Name */}
-                          <div
-                            className="font-bold text-emerald-800 truncate"
-                            style={{ fontFamily: 'var(--font-family-display)' }}
-                          >
-                            {char.name}
-                          </div>
-
-                          {/* Book & Series */}
-                          <div className="text-xs text-stone-500 truncate mt-1">
-                            {char.bookTitle}
-                            {char.seriesName && ` • ${char.seriesName}`}
-                          </div>
-
-                          {/* Position & Rating */}
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${getPositionColor(char.player?.position)}`}>
-                              {getPositionLabel(char.player?.position)}
-                            </span>
-                            <div className="ml-auto">
-                              <RatingBackboards rating={char.bookRating} size="sm" />
-                            </div>
-                          </div>
-                        </div>
+                          {section.name}
+                        </h3>
+                        <div className="h-px flex-1 bg-emerald-200" />
                       </div>
-                    </button>
-                  )
-                })}
-              </div>
-
-              {filteredCharacters.length === 0 && (
-                <div className="text-center py-12 text-stone-500">
-                  No characters match your filters
+                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                        {section.chars.map(char => {
+                          const canPick = isUserPick && !isAIPicking && isValidPick(char, rosters[userDraftPosition] || [], numRounds)
+                          return <PoolCard key={char.id} char={char} canPick={canPick} onPick={handleUserPick} />
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                  {availableCharacters.length === 0 && (
+                    <div className="text-center py-12 text-stone-500">All characters have been drafted!</div>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {filteredCharacters.map(char => {
+                      const canPick = isUserPick && !isAIPicking && isValidPick(char, rosters[userDraftPosition] || [], numRounds)
+                      return <PoolCard key={char.id} char={char} canPick={canPick} onPick={handleUserPick} />
+                    })}
+                  </div>
+                  {filteredCharacters.length === 0 && (
+                    <div className="text-center py-12 text-stone-500">
+                      No characters match your filters
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -824,7 +933,7 @@ export default function Draft() {
                 {teamName || 'YOUR TEAM'}
               </div>
               <p className="text-emerald-200 mb-6">
-                {numRounds} characters drafted and ready to compete
+                5 books drafted — squad revealed
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
@@ -856,31 +965,51 @@ export default function Draft() {
                 {(rosters[userDraftPosition] || []).map((char, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-4 p-3 bg-amber-50 rounded-lg"
+                    className="flex items-center gap-4 p-3 bg-amber-50 rounded-lg animate-fade-in"
+                    style={{ animationDelay: `${i * 0.08}s` }}
                   >
-                    <div
-                      className="text-3xl font-bold text-amber-400 w-16 text-center"
-                      style={{ fontFamily: 'var(--font-family-display)' }}
-                    >
-                      #{char.player?.number || '00'}
-                    </div>
-                    <div className="flex-1">
+                    {/* Book Cover */}
+                    {char.bookCoverUrl ? (
+                      <img
+                        src={char.bookCoverUrl}
+                        alt={char.bookTitle}
+                        className="w-16 h-24 object-cover rounded shadow-md flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-16 h-24 bg-emerald-100 rounded flex-shrink-0" />
+                    )}
+
+                    {/* Character Info */}
+                    <div className="flex-1 min-w-0">
                       <div
-                        className="font-bold text-emerald-800"
+                        className="font-bold text-emerald-800 text-lg"
                         style={{ fontFamily: 'var(--font-family-display)' }}
                       >
                         {char.name}
-                        <span className="text-stone-400 font-normal mx-2">is</span>
-                        {char.player?.name}
                       </div>
-                      <div className="text-sm text-stone-500">
-                        {char.bookTitle}
+                      <div className="text-amber-600 text-sm">playing like {char.player?.name}</div>
+                      <div className="text-xs text-stone-500 mt-0.5">{char.bookTitle}</div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${getPositionColor(char.player?.position)}`}>
+                          {getPositionLabel(char.player?.position)}
+                        </span>
+                        <RatingBackboards rating={char.bookRating} size="sm" />
                       </div>
                     </div>
-                    <span className={`px-2 py-1 rounded text-sm font-medium ${getPositionColor(char.player?.position)}`}>
-                      {getPositionLabel(char.player?.position)}
-                    </span>
-                    <RatingBackboards rating={char.bookRating} size="sm" />
+
+                    {/* Stats */}
+                    {char.player?.stats && (
+                      <div className="flex gap-3 flex-shrink-0 text-center">
+                        {[['PPG', char.player.stats.ppg], ['RPG', char.player.stats.rpg], ['APG', char.player.stats.apg]].map(([label, val]) => (
+                          <div key={label}>
+                            <div className="text-amber-600 font-bold text-sm">
+                              {typeof val === 'number' ? val.toFixed(1) : (val ?? '—')}
+                            </div>
+                            <div className="text-stone-400 text-xs">{label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
